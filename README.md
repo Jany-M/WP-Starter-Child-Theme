@@ -22,10 +22,9 @@ Comes with examples & snippets for custom:
 **23/3/2015**
 - `release` version 1
 
-## Credits
+## Author
 
-[WP] Starter Child Theme: Jany Martelli @ [Shambix](http://www.shambix.com)
-
+Jany Martelli @ [Shambix](http://www.shambix.com)
 
 ## License
 
