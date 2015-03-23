@@ -1,0 +1,12 @@
+/*
+Theme Name: [WP] Starter Child Theme
+Template: wp-starter
+Text Domain: wp-starter-child
+Description: Child theme of [WP] Starter 
+Author: Shambix
+Author URI: http://www.shambix.com
+Version: 1
+*/
+
+/* if child import parent css */
+@import url("../wp-starter/style.css");
