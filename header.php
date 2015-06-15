@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html <?php language_attributes(); ?> class="no-js"><!--<![endif]-->
 <head>
 	<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <meta name="author" content="Shambix.com">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<!-- <meta name="title" content="<?php //bloginfo('name'); ?>" 
