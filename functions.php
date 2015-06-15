@@ -60,8 +60,21 @@ function load_child_files() {
 	
 	// Print CSS
 	/*wp_register_style( 'print_css', ''.get_stylesheet_directory_uri().'/css/print.css', array('resp_theme_css'), '', 'screen');
-	$wp_styles->add_data( 'ie7_css', 'conditional', 'IE 7' );
-	wp_enqueue_style( 'ie7_css' );*/
+	wp_enqueue_style( 'print_css' );*/
+
+	// Custom CSS
+
+	
+
+	// JS
+	/*wp_register_script( 'img_loaded', ''.get_template_directory_uri().'/library/js/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
+    wp_enqueue_script( 'img_loaded' );
+
+    wp_register_script( 'isotope', ''.get_template_directory_uri().'/library/js/isotope.pkgd.min.js', array('jquery'), '2.1.0', true);
+    wp_enqueue_script( 'isotope' );
+
+    wp_register_script( 'infinite_scroll', ''.get_template_directory_uri().'/library/js/jquery.infinitescroll.min.js', array('jquery'), '2.1.0', true);
+    wp_enqueue_script( 'infinite_scroll' );*/
 }
 
 // Don't load this stuff in Admin panel, it will slow down everything and maybe also break it
