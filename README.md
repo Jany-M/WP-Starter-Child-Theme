@@ -1,4 +1,4 @@
-# [WP] Starter Child Theme `v 1`
+# [WP] Starter Child Theme `v 1.2`
 
 A bare WordPress child theme with the latest Bootstrap and other WordPress handy functions, ready to use.
 This is meant to be used with its Parent Theme [WP-Starter](https://github.com/Jany-M/WP-Starter) to work as intended.
