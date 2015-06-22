@@ -43,38 +43,25 @@ include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
 function load_child_files() {
 	
 	// Default CSS
-	wp_register_style( 'custom_css', ''.get_stylesheet_directory_uri().'/css/style.css', array('bootstrap_css'), '', 'all');
+	wp_register_style( 'custom_css', ''.get_stylesheet_directory_uri().'/assets/css/style.css', array('bootstrap_css'), '', 'all');
 	wp_enqueue_style( 'custom_css' );
 
 	// Browser Specific
 	/*global $wp_styles;
-	wp_register_style( 'ie7_css', ''.get_stylesheet_directory_uri().'/css/ie7.css', array('custom_css'), '', screen');
+	wp_register_style( 'ie7_css', ''.get_stylesheet_directory_uri().'/assets/css/ie7.css', array('custom_css'), '', screen');
 	$wp_styles->add_data( 'ie7_css', 'conditional', 'IE 7' );
 	wp_enqueue_style( 'ie7_css' );*/
 	
 	// Responsive CSS
-	if(file_exists(get_stylesheet_directory_uri().'/css/responsive.css')) {
-		wp_register_style( 'resp_theme_css', get_stylesheet_directory_uri().'/css/responsive.css', array('custom_css'), '', 'all');
+	if(file_exists(get_stylesheet_directory_uri().'/assets/css/responsive.css')) {
+		wp_register_style( 'resp_theme_css', get_stylesheet_directory_uri().'/assets/css/responsive.css', array('custom_css'), '', 'all');
 		wp_enqueue_style( 'resp_theme_css' );
 	}	
 	
 	// Print CSS
-	/*wp_register_style( 'print_css', ''.get_stylesheet_directory_uri().'/css/print.css', array('resp_theme_css'), '', 'screen');
+	/*wp_register_style( 'print_css', ''.get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'screen');
 	wp_enqueue_style( 'print_css' );*/
 
-	// Custom CSS
-
-	
-
-	// JS
-	/*wp_register_script( 'img_loaded', ''.get_template_directory_uri().'/library/js/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
-    wp_enqueue_script( 'img_loaded' );
-
-    wp_register_script( 'isotope', ''.get_template_directory_uri().'/library/js/isotope.pkgd.min.js', array('jquery'), '2.1.0', true);
-    wp_enqueue_script( 'isotope' );
-
-    wp_register_script( 'infinite_scroll', ''.get_template_directory_uri().'/library/js/jquery.infinitescroll.min.js', array('jquery'), '2.1.0', true);
-    wp_enqueue_script( 'infinite_scroll' );*/
 }
 
 // Don't load this stuff in Admin panel, it will slow down everything and maybe also break it
