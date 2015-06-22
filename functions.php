@@ -28,6 +28,10 @@ function wp_starter_childtheme_setup() {
 	//add_theme_support( 'custom-background' );  // wp custom background
 	//add_theme_support('automatic-feed-links'); // rss thingy
 	// to add header image support go here: http://themble.com/support/adding-header-background-image-support/
+	
+	// ADD LANGUAGE FILE
+	// Uncomment to load po/mo files from a languages folder (you need to create it first)
+	//load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/languages' );
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
