@@ -9,6 +9,8 @@
 -------------------------------------------------------------------------------- */
 global $theme_name;
 global $locale;
+define('TEMPLATEPATH', get_template_directory());
+define('STYLESHEETPATH', get_stylesheet_directory());
 
 // ADD THEME SUPPORT
 function wp_starter_childtheme_setup() {
@@ -54,7 +56,7 @@ function load_child_files() {
 	wp_enqueue_style( 'ie7_css' );*/
 
 	// Default CSS
-	wp_register_style( 'custom_css', ''.get_stylesheet_directory_uri().'/assets/css/style.css', array('bootstrap_css'), '', 'all');
+	wp_register_style( 'custom_css', get_stylesheet_directory_uri().'/assets/css/style.css', array('bootstrap_css'), '', 'all');
 	wp_enqueue_style( 'custom_css' );
 
 	// Responsive CSS
@@ -65,7 +67,7 @@ function load_child_files() {
 	
 	// Print CSS
 	if(file_exists(get_stylesheet_directory_uri().'/assets/css/print.css')) {
-		wp_register_style( 'print_css', ''.get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'print');
+		wp_register_style( 'print_css', get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'print');
 		wp_enqueue_style( 'print_css' );
 	}
 
