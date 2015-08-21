@@ -7,14 +7,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-    <meta name="author" content="Shambix.com">
+    <meta name="author" content="<?php bloginfo('name'); ?>">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<!-- <meta name="title" content="<?php //bloginfo('name'); ?>" 
-	<meta name="description" content="<?php //bloginfo('description'); ?>">
-	<meta name="keywords" content=""> -->
-	<!-- <meta name="robots" content="INDEX, FOLLOW">
+	<meta name="title" content="<?php bloginfo('name'); ?>">
+	<meta name="description" content="<?php bloginfo('description'); ?>">
+	<!-- <meta name="keywords" content="">
+	<meta name="robots" content="INDEX, FOLLOW">
 	<meta name="revisit-after" content="7 days">
-	<meta name="document-classification" content="Tour operator">
 	<meta name="document-distribution" content="Global">
 	<meta name="Audience" content="General">
 	<meta name="Rating" content="General">
@@ -37,7 +36,7 @@
 		if ($paged>1) {
 			echo ' - page '. $paged; }
 	?></title>
-	<link rel="shortcut icon" href="<?php bloginfo('template_directory');?>/images/favicon.ico">    
+	<!-- <link rel="shortcut icon" href="<?php //bloginfo('template_directory');?>/assets/img/favicon.ico">  -->
 	<!-- media-queries.js (fallback) -->
 	<!--[if lt IE 9]><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
 	<!-- html5.js -->
