@@ -1,6 +1,45 @@
 <?php
 /* -------------------------------------------------------------------------------- 
 *
+* [WP] Starter Child Theme - DEBUG
+*
+-------------------------------------------------------------------------------- */
+/*function display_vars() {
+	global $wp_query, $post, $product, $woocommerce, $WCS;
+
+	if(current_user_can('activate_plugins')) : 
+		echo '<pre>';
+		print_r( $wp_query );
+		echo '</pre>';
+
+		echo '<pre>';
+		print_r($post);
+		echo '</pre>';
+
+		echo '<pre>';
+		print_r($product);
+		echo '</pre>';
+
+		echo '<pre>';
+		print_r($woocommerce);
+		echo '</pre>';
+
+		echo '<pre>';
+		print_r($WCS);
+		echo '</pre>';
+	endif;
+}
+add_action('wp','display_vars');*/
+
+// ERROR HANDLING - If you need to debug
+/*if(current_user_can('edit_posts')) :
+	error_reporting(E_ALL); // everything
+	else :
+	error_reporting(0);
+endif;*/
+
+/* -------------------------------------------------------------------------------- 
+*
 * [WP] Starter Child Theme - SETUP
 * Custom theme that works with its parent [WP] Starter https://github.com/Jany-M/WP-Starter
 * Developed by Shambix @ http://www.shambix.com
@@ -9,8 +48,8 @@
 -------------------------------------------------------------------------------- */
 global $theme_name;
 global $locale;
-define('TEMPLATEPATH', get_template_directory());
-define('STYLESHEETPATH', get_stylesheet_directory());
+define('TEMPLATEPATH', get_template_directory()); // Parent Theme
+define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 
 // ADD THEME SUPPORT
 function wp_starter_childtheme_setup() {
@@ -37,7 +76,7 @@ function wp_starter_childtheme_setup() {
 	
 	// ADD LANGUAGE FILE
 	// Uncomment to load po/mo files from a languages folder (you need to create it first)
-	//load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/languages' );
+	load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/lang' );
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
@@ -81,6 +120,14 @@ if(!is_admin()) {
 	add_action('wp_enqueue_scripts', 'load_child_files', 99);
 }
 
+// Add css for Backend Editor
+function custom_editor_styles() {
+    add_editor_style( get_stylesheet_directory_uri().'/assets/css/editor-style.css' );
+}
+if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
+	add_action( 'admin_init', 'custom_editor_styles' );
+}
+
 /* -------------------------------------------------------------------------------- 
 *
 * [WP] Starter Child Theme - CUSTOM FILES & HELPERS
@@ -91,41 +138,8 @@ if(!is_admin()) {
 //include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
 //include_once 'wordpress/custom_menus.php'; // use this file to add menus
 //include_once 'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
-//include(get_stylesheet_directory_uri().'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
+//include('wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
-
-
-/* -------------------------------------------------------------------------------- 
-*
-* [WP] Starter Child Theme - DEBUG
-*
--------------------------------------------------------------------------------- */
-/*function display_vars() {
-	global $wp_query, $post, $product, $woocommerce, $WCS;
-
-	if(current_user_can('activate_plugins')) : 
-		echo '<pre>';
-		print_r( $wp_query );
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($post);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($product);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($woocommerce);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($WCS);
-		echo '</pre>';
-	endif;
-}
-add_action('wp','display_vars');*/
 
 ?>
