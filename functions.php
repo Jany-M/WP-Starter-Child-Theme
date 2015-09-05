@@ -46,10 +46,10 @@ endif;*/
 * Please check for info https://github.com/Jany-M/WP-Starter-Child-Theme
 *
 -------------------------------------------------------------------------------- */
+if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
+if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 global $theme_name;
 global $locale;
-define('TEMPLATEPATH', get_template_directory()); // Parent Theme
-define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 
 // ADD THEME SUPPORT
 function wp_starter_childtheme_setup() {
