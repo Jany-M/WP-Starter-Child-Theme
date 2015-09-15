@@ -48,11 +48,23 @@ endif;*/
 -------------------------------------------------------------------------------- */
 if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
 if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
-global $theme_name;
-global $locale;
+
+if(current_user_can('activate_plugins')) :
+	// ERROR HANDLING - DEBUG for Admins
+	error_reporting(E_ALL); // everything
+	//error_reporting(E_ALL & ~E_NOTICE);// Report all errors except E_NOTICE
+	//error_reporting(E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
+else :
+	error_reporting(0);
+endif;
 
 // ADD THEME SUPPORT
+global $theme_name, $locale;
+$theme = wp_get_theme();
+$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
+
 function wp_starter_childtheme_setup() {
+	global $theme_name;
 	/*add_theme_support( 'post-formats',
 		array( 
 			'aside',   // title less blurb
@@ -70,9 +82,6 @@ function wp_starter_childtheme_setup() {
 	//add_theme_support( 'custom-background' );  // wp custom background
 	//add_theme_support('automatic-feed-links'); // rss thingy
 	// to add header image support go here: http://themble.com/support/adding-header-background-image-support/
-
-	// ADD WOOCOMMERCE 
-	add_theme_support( 'woocommerce' );
 	
 	// ADD LANGUAGE FILE
 	// Uncomment to load po/mo files from a languages folder (you need to create it first)
