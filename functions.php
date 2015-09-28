@@ -31,12 +31,14 @@
 }
 add_action('wp','display_vars');*/
 
-// ERROR HANDLING - If you need to debug
-/*if(current_user_can('edit_posts')) :
-	error_reporting(E_ALL); // everything
+// ERROR HANDLING - DEBUG for Admins
+if(current_user_can('activate_plugins')) :
+	//error_reporting(E_ALL); // everything
+	error_reporting(E_ALL & ~E_NOTICE & & ~E_STRICT);// Report all errors except E_NOTICE
+	//error_reporting(E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
 	else :
 	error_reporting(0);
-endif;*/
+endif;
 
 /* -------------------------------------------------------------------------------- 
 *
@@ -49,19 +51,10 @@ endif;*/
 if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
 if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 
-if(current_user_can('activate_plugins')) :
-	// ERROR HANDLING - DEBUG for Admins
-	error_reporting(E_ALL); // everything
-	//error_reporting(E_ALL & ~E_NOTICE);// Report all errors except E_NOTICE
-	//error_reporting(E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
-else :
-	error_reporting(0);
-endif;
-
 // ADD THEME SUPPORT
 global $theme_name, $locale;
-$theme = wp_get_theme();
-$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
+//$theme = wp_get_theme();
+//$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
 
 function wp_starter_childtheme_setup() {
 	global $theme_name;
