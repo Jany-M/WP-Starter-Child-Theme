@@ -34,7 +34,7 @@ add_action('wp','display_vars');*/
 // ERROR HANDLING - DEBUG for Admins
 if(current_user_can('activate_plugins')) :
 	//error_reporting(E_ALL); // everything
-	error_reporting(E_ALL & ~E_NOTICE & & ~E_STRICT);// Report all errors except E_NOTICE
+	error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);// Report all errors except E_NOTICE
 	//error_reporting(E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
 	else :
 	error_reporting(0);
@@ -48,8 +48,8 @@ endif;
 * Please check for info https://github.com/Jany-M/WP-Starter-Child-Theme
 *
 -------------------------------------------------------------------------------- */
-if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
-if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
+//if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
+//if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 
 // ADD THEME SUPPORT
 global $theme_name, $locale;
