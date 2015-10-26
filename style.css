@@ -1,6 +1,6 @@
 /*
 Theme Name: [WP] Starter Child Theme
-Template: WP-Starter
+Template: wp-starter
 Text Domain: wp-starter-child
 Description: Child theme skeleton developed for the [WP] Starter theme framework.
 Author: Shambix
@@ -11,4 +11,4 @@ Version: 1.3.1
 */
 
 /* if child import parent css */
-@import url("../WP-Starter/style.css");
+@import url("../wp-starter/style.css");
