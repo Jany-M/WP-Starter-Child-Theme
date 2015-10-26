@@ -40,6 +40,15 @@ if(current_user_can('activate_plugins')) :
 	error_reporting(0);
 endif;
 
+/*
+get_stylesheet_directory_uri(); // Child Theme
+get_template_directory_uri(); // Parent Theme
+get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
+ABSPATH; // /home/shambs/shambix.com/
+TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
+STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
+*/
+
 /* -------------------------------------------------------------------------------- 
 *
 * [WP] Starter Child Theme - SETUP
@@ -48,8 +57,6 @@ endif;
 * Please check for info https://github.com/Jany-M/WP-Starter-Child-Theme
 *
 -------------------------------------------------------------------------------- */
-//if (!defined('TEMPLATEPATH')) define('TEMPLATEPATH', get_template_directory()); // Parent Theme
-//if (!defined('STYLESHEETPATH')) define('STYLESHEETPATH', get_stylesheet_directory()); // Child Theme
 
 // ADD THEME SUPPORT
 global $theme_name, $locale;
