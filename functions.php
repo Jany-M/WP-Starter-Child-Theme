@@ -60,8 +60,8 @@ STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 
 // ADD THEME SUPPORT
 global $theme_name, $locale;
-//$theme = wp_get_theme();
-//$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
+$theme = wp_get_theme();
+$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
 
 function wp_starter_childtheme_setup() {
 	global $theme_name;
@@ -85,7 +85,9 @@ function wp_starter_childtheme_setup() {
 	
 	// ADD LANGUAGE FILE
 	// Uncomment to load po/mo files from a languages folder (you need to create it first)
-	load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/lang' );
+	// If you create with PoEdit, it might give you an error since we are using a variable instead of theme name in plain text, in that case just temporarily use this
+	//load_child_theme_textdomain( 'wp-starter-child'); //chanhe the theme name if you've changed the Text Domain of this child theme
+	load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/languages' );
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
