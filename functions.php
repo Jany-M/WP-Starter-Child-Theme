@@ -91,10 +91,6 @@ function wp_starter_childtheme_setup() {
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
-// Include [WP] Starter scripts
-include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
-//include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
-
 /* -------------------------------------------------------------------------------- 
 *
 * [WP] Starter Child Theme - CSS & JS
@@ -144,6 +140,15 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 * [WP] Starter Child Theme - CUSTOM FILES & HELPERS
 *
 -------------------------------------------------------------------------------- */
+
+// script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
+if(file_exists(get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php')) {
+	include_once get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php'; 
+}
+
+// Include [WP] Starter scripts
+include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
+//include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
 
 // Include WordPress Related
 //include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
