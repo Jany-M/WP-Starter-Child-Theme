@@ -137,7 +137,30 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 
 /* -------------------------------------------------------------------------------- 
 *
-* StarUp - LOGIN URL
+* [WP] Starter Child Theme - CUSTOM FILES & HELPERS
+*
+-------------------------------------------------------------------------------- */
+
+// script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
+if(file_exists(get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php')) {
+	include_once get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php'; 
+}
+
+// Include [WP] Starter scripts
+include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
+//include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
+
+// Include WordPress Related
+//include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
+//include_once 'wordpress/custom_menus.php'; // use this file to add menus
+//include_once 'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
+//include('wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
+
+// Include Custom scripts & functions
+
+/* -------------------------------------------------------------------------------- 
+*
+* [WP] Starter Child Theme - LOGIN SCREEN
 *
 -------------------------------------------------------------------------------- */
 
@@ -165,30 +188,5 @@ function custom_login_logo() {
 	</style>
 <?php }
 //add_action('login_head', 'custom_login_logo');
-
-/* -------------------------------------------------------------------------------- 
-*
-* [WP] Starter Child Theme - CUSTOM FILES & HELPERS
-*
--------------------------------------------------------------------------------- */
-
-// script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
-if(file_exists(get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php')) {
-	include_once get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php'; 
-}
-
-// Include [WP] Starter scripts
-include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
-//include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
-
-// Include WordPress Related
-//include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
-//include_once 'wordpress/custom_menus.php'; // use this file to add menus
-//include_once 'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
-//include('wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
-
-// Include Custom scripts & functions
-
-
 
 ?>
