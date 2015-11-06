@@ -137,6 +137,37 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 
 /* -------------------------------------------------------------------------------- 
 *
+* StarUp - LOGIN URL
+*
+-------------------------------------------------------------------------------- */
+
+function custom_login_logo() {
+	global $def_login_img_url, $def_login_img_w, $def_login_img_h;
+
+	if(file_exists(dirname(__FILE__) . '/assets/img/logo.png')) {
+		$login_img_url = get_stylesheet_directory_uri().'/assets/img/logo.png';
+		$login_img_w = '200px';
+		$login_img_h = '111px';
+	} else {
+		$login_img_url = $def_login_img_url;
+		$login_img_w = $def_login_img_w;
+		$login_img_h = $def_login_img_h;
+	}
+	?>
+	<style type="text/css">
+		body.login div#login h1 a {
+			background-image: url(<?php echo $login_img_url; ?>);
+			background-size: auto auto;
+			padding-bottom: 0px;
+			width: <?php echo $login_img_w; ?>;
+			height: <?php echo $login_img_h; ?>;
+		}
+	</style>
+<?php }
+//add_action('login_head', 'custom_login_logo');
+
+/* -------------------------------------------------------------------------------- 
+*
 * [WP] Starter Child Theme - CUSTOM FILES & HELPERS
 *
 -------------------------------------------------------------------------------- */
@@ -157,5 +188,7 @@ include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
 //include('wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
+
+
 
 ?>
