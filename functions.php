@@ -142,13 +142,14 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 -------------------------------------------------------------------------------- */
 
 // script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
-if(file_exists(get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php')) {
-	include_once get_stylesheet_directory_uri().'/assets/scripts/wp-imager.php'; 
+$wpimpager_child = STYLESHEETPATH.'/scripts/wp-imager.php';
+$wpimpager_parent = TEMPLATEPATH.'/library/helpers/wp-imager.php';
+if(is_file($wpimpager_child) || file_exists($wpimpager_child) || is_file($wpimpager_parent) || file_exists($wpimpager_parent)) { 
+	include_once 'scripts/wp-imager.php';
 }
-
 // Include [WP] Starter scripts
 include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
-//include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
+include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
 
 // Include WordPress Related
 //include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
