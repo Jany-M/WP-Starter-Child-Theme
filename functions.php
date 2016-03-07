@@ -97,6 +97,11 @@ add_action('after_setup_theme','wp_starter_childtheme_setup');
 *
 -------------------------------------------------------------------------------- */
 function load_child_files() {
+
+	// By default WP Starter loads jquery 2.1.4 - If it causes problems, please load this one
+	/*wp_deregister_script( 'jquery' );
+    wp_register_script('jquery', includes_url( '/js/jquery/jquery.js' ), '', '1.11.3');
+    wp_enqueue_script( 'jquery' );*/
 	
 	// Browser Specific
 	/*global $wp_styles;
