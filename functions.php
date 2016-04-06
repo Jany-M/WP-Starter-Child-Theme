@@ -1,4 +1,17 @@
 <?php
+
+define('WP_STARTER_CHILD_VERS', '1.3.6');
+if(!defined('WP_STARTER_LIB'))
+	define('WP_STARTER_LIB', TEMPLATEPATH.'/libs/');
+/*
+get_stylesheet_directory_uri(); // Child Theme
+get_template_directory_uri(); // Parent Theme
+get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
+ABSPATH; // /home/shambs/shambix.com/
+TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
+STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
+*/
+
 /* -------------------------------------------------------------------------------- 
 *
 * [WP] Starter Child Theme - DEBUG
@@ -39,15 +52,6 @@ if(current_user_can('activate_plugins')) :
 	else :
 	error_reporting(0);
 endif;
-
-/*
-get_stylesheet_directory_uri(); // Child Theme
-get_template_directory_uri(); // Parent Theme
-get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
-ABSPATH; // /home/shambs/shambix.com/
-TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
-STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
-*/
 
 /* -------------------------------------------------------------------------------- 
 *
@@ -148,19 +152,18 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 
 // script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
 $wpimpager_child = STYLESHEETPATH.'/scripts/wp-imager.php';
-$wpimpager_parent = TEMPLATEPATH.'/library/helpers/wp-imager.php';
+$wpimpager_parent = TEMPLATEPATH.'/libs/helpers/wp-imager.php';
 if(is_file($wpimpager_child) || file_exists($wpimpager_child) || is_file($wpimpager_parent) || file_exists($wpimpager_parent)) { 
 	include_once 'scripts/wp-imager.php';
 }
-// Include [WP] Starter scripts
-include_once TEMPLATEPATH.'/library/wordpress/cool_scripts.php';
-include_once TEMPLATEPATH.'/library/wordpress/shortcodes.php';
+include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
+include_once WP_STARTER_LIB.'wordpress/shortcodes.php';
 
 // Include WordPress Related
 //include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
 //include_once 'wordpress/custom_menus.php'; // use this file to add menus
 //include_once 'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
-//include('wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
+//include(get_stylesheet_directory_uri().'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
 
