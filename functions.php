@@ -143,6 +143,10 @@ include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
 
 // Include Custom scripts & functions
 
+// Remove emoji stuff - it runs asynchronously, so it wont affect performance, but hey maybe you dont need it anyway
+remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
 /* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - LOGIN SCREEN
