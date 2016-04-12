@@ -1,8 +1,20 @@
 <?php
 
-define('WP_STARTER_CHILD_VERS', '1.3.6');
-if(!defined('WP_STARTER_LIB'))
-	define('WP_STARTER_LIB', TEMPLATEPATH.'/libs/');
+/* --------------------------------------------------------------------------------
+*
+* [WP] Starter Child Theme - SETUP
+* Custom theme that works with its parent [WP] Starter https://github.com/Jany-M/WP-Starter
+* Developed by Shambix @ http://www.shambix.com
+* Please check for info https://github.com/Jany-M/WP-Starter-Child-Theme
+*
+-------------------------------------------------------------------------------- */
+
+define('WP_STARTER_CHILD_VERS', '1.3.7');
+if(!defined('WP_STARTER_CHILD_LIB'))
+	define('WP_STARTER_CHILD_LIB', STYLESHEETPATH.'/lib/');
+if(!defined('WP_STARTER_LIB')) // unless you put it in wp-config, you need to redefine it here too
+	define('WP_STARTER_LIB', TEMPLATEPATH.'/lib/');
+
 /*
 get_stylesheet_directory_uri(); // Child Theme
 get_template_directory_uri(); // Parent Theme
@@ -12,55 +24,14 @@ TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
 STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 */
 
-/* -------------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - DEBUG
 *
 -------------------------------------------------------------------------------- */
-/*function display_vars() {
-	global $wp_query, $post, $product, $woocommerce, $WCS;
 
-	if(current_user_can('activate_plugins')) : 
-		echo '<pre>';
-		print_r( $wp_query );
-		echo '</pre>';
+include_once(STYLESHEETPATH.'/assets/debug_tools.php');
 
-		echo '<pre>';
-		print_r($post);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($product);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($woocommerce);
-		echo '</pre>';
-
-		echo '<pre>';
-		print_r($WCS);
-		echo '</pre>';
-	endif;
-}
-add_action('wp','display_vars');*/
-
-// ERROR HANDLING - DEBUG for Admins
-if(current_user_can('activate_plugins')) :
-	//error_reporting(E_ALL); // everything
-	error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);// Report all errors except E_NOTICE
-	//error_reporting(E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
-	else :
-	error_reporting(0);
-endif;
-
-/* -------------------------------------------------------------------------------- 
-*
-* [WP] Starter Child Theme - SETUP
-* Custom theme that works with its parent [WP] Starter https://github.com/Jany-M/WP-Starter
-* Developed by Shambix @ http://www.shambix.com
-* Please check for info https://github.com/Jany-M/WP-Starter-Child-Theme
-*
--------------------------------------------------------------------------------- */
 
 // ADD THEME SUPPORT
 global $theme_name, $locale;
@@ -70,23 +41,23 @@ $theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for in
 function wp_starter_childtheme_setup() {
 	global $theme_name;
 	/*add_theme_support( 'post-formats',
-		array( 
+		array(
 			'aside',   // title less blurb
 			'gallery', // gallery of images
 			'link',    // quick link to other site
 			'image',   // an image
 			'quote',   // a quick quote
 			'status',  // a Facebook like status update
-			'video',   // video 
+			'video',   // video
 			'audio',   // audio
-			'chat'     // chat transcript 
+			'chat'     // chat transcript
 		)
-	);*/	
+	);*/
 	//set_post_thumbnail_size(125, 125, true);   // default thumb size
 	//add_theme_support( 'custom-background' );  // wp custom background
 	//add_theme_support('automatic-feed-links'); // rss thingy
 	// to add header image support go here: http://themble.com/support/adding-header-background-image-support/
-	
+
 	// ADD LANGUAGE FILE
 	// Uncomment to load po/mo files from a languages folder (you need to create it first)
 	// If you create with PoEdit, it might give you an error since we are using a variable instead of theme name in plain text, in that case just temporarily use this
@@ -95,7 +66,7 @@ function wp_starter_childtheme_setup() {
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
-/* -------------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CSS & JS
 *
@@ -106,7 +77,7 @@ function load_child_files() {
 	/*wp_deregister_script( 'jquery' );
     wp_register_script('jquery', includes_url( '/js/jquery/jquery.js' ), '', '1.11.3');
     wp_enqueue_script( 'jquery' );*/
-	
+
 	// Browser Specific
 	/*global $wp_styles;
 	wp_register_style( 'ie7_css', ''.get_stylesheet_directory_uri().'/assets/css/ie7.css', array('custom_css'), '', screen');
@@ -121,8 +92,8 @@ function load_child_files() {
 	if(file_exists(get_stylesheet_directory_uri().'/assets/css/responsive.css')) {
 		wp_register_style( 'resp_theme_css', get_stylesheet_directory_uri().'/assets/css/responsive.css', array('custom_css'), '', 'all');
 		wp_enqueue_style( 'resp_theme_css' );
-	}	
-	
+	}
+
 	// Print CSS
 	if(file_exists(get_stylesheet_directory_uri().'/assets/css/print.css')) {
 		wp_register_style( 'print_css', get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'print');
@@ -144,30 +115,35 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 	add_action( 'admin_init', 'custom_editor_styles' );
 }
 
-/* -------------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CUSTOM FILES & HELPERS
 *
 -------------------------------------------------------------------------------- */
 
 // script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
-$wpimpager_child = STYLESHEETPATH.'/scripts/wp-imager.php';
-$wpimpager_parent = TEMPLATEPATH.'/libs/helpers/wp-imager.php';
-if(is_file($wpimpager_child) || file_exists($wpimpager_child) || is_file($wpimpager_parent) || file_exists($wpimpager_parent)) { 
-	include_once 'scripts/wp-imager.php';
-}
+$wpimpager_child = STYLESHEETPATH.'/lib/helpers/wp-imager.php';
+if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
+	include_once STYLESHEETPATH.'/lib/helpers/wp-imager.php';
+} else { echo 'cant find wp-imager in child'; }
+
+$wpimpager_parent = WP_STARTER_LIB.'helpers/wp-imager.php';
+if(is_file($wpimpager_parent) || file_exists($wpimpager_parent)) {
+	include_once WP_STARTER_LIB.'helpers/wp-imager.php';
+}// else { echo 'cant find wp-imager in parent'; }
+
 include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
-include_once WP_STARTER_LIB.'wordpress/shortcodes.php';
+//include_once WP_STARTER_LIB.'wordpress/shortcodes.php';
 
 // Include WordPress Related
-//include_once 'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
-//include_once 'wordpress/custom_menus.php'; // use this file to add menus
-//include_once 'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
-//include(get_stylesheet_directory_uri().'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
+//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
+//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_menus.php'; // use this file to add menus
+//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
+//include_once WP_STARTER_CHILD_LIB.'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
 
-/* -------------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - LOGIN SCREEN
 *
