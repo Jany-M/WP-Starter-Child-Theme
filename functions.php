@@ -9,11 +9,24 @@
 *
 -------------------------------------------------------------------------------- */
 
-define('WP_STARTER_CHILD_VERS', '1.3.7');
-if(!defined('WP_STARTER_CHILD_LIB'))
-	define('WP_STARTER_CHILD_LIB', STYLESHEETPATH.'/lib/');
-if(!defined('WP_STARTER_LIB')) // unless you put it in wp-config, you need to redefine it here too
-	define('WP_STARTER_LIB', TEMPLATEPATH.'/lib/');
+define('WP_STARTER_CHILD_VERS', '1.3.8');
+
+if(!defined('WP_STARTER_CHILD_ASSETS_PATH')) // change this in your wp-config
+	define('WP_STARTER_CHILD_ASSETS_PATH', STYLESHEETPATH.'/assets/');
+if(!defined('WP_STARTER_CHILD_ASSETS_URL')) // change this in your wp-config
+	define('WP_STARTER_CHILD_ASSETS_URL', get_stylesheet_directory_uri().'/assets/');
+if(!defined('WP_STARTER_CHILD_LIB_PATH')) // change this in your wp-config
+	define('WP_STARTER_CHILD_LIB_PATH', STYLESHEETPATH.'/lib/');
+if(!defined('WP_STARTER_LIB_PATH')) // change this in your wp-config
+	define('WP_STARTER_LIB_PATH', TEMPLATEPATH.'/lib/');
+if(!defined('WP_STARTER_CHILD_LANG')) // change this in your wp-config
+	define('WP_STARTER_CHILD_LANG', STYLESHEETPATH.'/languages/'); // change this in your wp-config - keep in mind that 'languages' is compatible with WPML
+
+$theme = wp_get_theme();
+if(!defined('THEME_DOMAIN'))
+	define('THEME_DOMAIN', $theme->get('TextDomain')); //use this var when necessary, for inline translations eg. _e('Contact us', THEME_DOMAIN);
+if(!defined('THEME_NAME'))
+	define('THEME_NAME', $theme->get('Name'));
 
 /*
 get_stylesheet_directory_uri(); // Child Theme
@@ -32,14 +45,10 @@ STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 
 include_once(STYLESHEETPATH.'/assets/debug_tools.php');
 
+global $locale;
 
 // ADD THEME SUPPORT
-global $theme_name, $locale;
-$theme = wp_get_theme();
-$theme_name = $theme->get( 'TextDomain' ); //use this var when necessary, for inline translations eg. _e('Contact us', $theme_name);
-
 function wp_starter_childtheme_setup() {
-	global $theme_name;
 	/*add_theme_support( 'post-formats',
 		array(
 			'aside',   // title less blurb
@@ -59,10 +68,7 @@ function wp_starter_childtheme_setup() {
 	// to add header image support go here: http://themble.com/support/adding-header-background-image-support/
 
 	// ADD LANGUAGE FILE
-	// Uncomment to load po/mo files from a languages folder (you need to create it first)
-	// If you create with PoEdit, it might give you an error since we are using a variable instead of theme name in plain text, in that case just temporarily use this
-	//load_child_theme_textdomain( 'wp-starter-child'); //chanhe the theme name if you've changed the Text Domain of this child theme
-	load_child_theme_textdomain( $theme_name, get_stylesheet_directory_uri() . '/languages' );
+	load_child_theme_textdomain( THEME_DOMAIN, WP_STARTER_CHILD_LANG);
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
@@ -89,13 +95,13 @@ function load_child_files() {
 	wp_enqueue_style( 'custom_css' );
 
 	// Responsive CSS
-	if(file_exists(get_stylesheet_directory_uri().'/assets/css/responsive.css')) {
+	if(file_exists(STYLESHEETPATH.'/assets/css/responsive.css')) {
 		wp_register_style( 'resp_theme_css', get_stylesheet_directory_uri().'/assets/css/responsive.css', array('custom_css'), '', 'all');
 		wp_enqueue_style( 'resp_theme_css' );
 	}
 
 	// Print CSS
-	if(file_exists(get_stylesheet_directory_uri().'/assets/css/print.css')) {
+	if(file_exists(STYLESHEETPATH.'/assets/css/print.css')) {
 		wp_register_style( 'print_css', get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'print');
 		wp_enqueue_style( 'print_css' );
 	}
@@ -111,7 +117,7 @@ if(!is_admin()) {
 function custom_editor_styles() {
     add_editor_style( get_stylesheet_directory_uri().'/assets/css/editor-style.css' );
 }
-if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
+if(file_exists(STYLESHEETPATH.'/assets/css/editor-style.css')) {
 	add_action( 'admin_init', 'custom_editor_styles' );
 }
 
@@ -121,16 +127,24 @@ if(file_exists(get_stylesheet_directory_uri().'/assets/css/editor-style.css')) {
 *
 -------------------------------------------------------------------------------- */
 
-// script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
-$wpimpager_child = STYLESHEETPATH.'/lib/helpers/wp-imager.php';
-if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
-	include_once STYLESHEETPATH.'/lib/helpers/wp-imager.php';
-} else { echo 'cant find wp-imager in child'; }
+function wp_imager_admin_msg() { ?>
+	<div class="notice notice-error">
+	    <p><?php _e('The file <code>wp-imager.php</code> was not found in the Child Template', THEME_DOMAIN); ?> <i><?php echo THEME_NAME; ?></i>.</p>
+		<p><?php _e('Please download it from <a href="https://github.com/Jany-M/WP-Imager" target="_blank">GitHub</a> and place it in the folder <code>/lib/helpers/</code>', THEME_DOMAIN); ?>.</p>
+	</div>
+    <?php
+}
 
-$wpimpager_parent = WP_STARTER_LIB.'helpers/wp-imager.php';
-if(is_file($wpimpager_parent) || file_exists($wpimpager_parent)) {
-	include_once WP_STARTER_LIB.'helpers/wp-imager.php';
-}// else { echo 'cant find wp-imager in parent'; }
+// script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
+$wpimpager_child = WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
+$wpimpager_parent = WP_STARTER_LIB_PATH.'helpers/wp-imager.php';
+if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
+	include_once WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
+} elseif (is_file($wpimpager_parent) || file_exists($wpimpager_parent)) {
+	include_once WP_STARTER_LIB_PATH.'helpers/wp-imager.php';
+} else {
+	add_action( 'admin_notices', 'wp_imager_admin_msg' );
+}
 
 include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
 //include_once WP_STARTER_LIB.'wordpress/shortcodes.php';
@@ -142,10 +156,6 @@ include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
 //include_once WP_STARTER_CHILD_LIB.'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
-
-// Remove emoji stuff - it runs asynchronously, so it wont affect performance, but hey maybe you dont need it anyway
-remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-remove_action( 'wp_print_styles', 'print_emoji_styles' );
 
 /* --------------------------------------------------------------------------------
 *
