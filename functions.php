@@ -79,10 +79,13 @@ add_action('after_setup_theme','wp_starter_childtheme_setup');
 -------------------------------------------------------------------------------- */
 function load_child_files() {
 
-	// By default WP Starter loads jquery 2.1.4 - If it causes problems, please load this one
+	// By default WP Starter loads jquery 2.1.4 - If it causes problems, deregister it and load a diff one
 	/*wp_deregister_script( 'jquery' );
-    wp_register_script('jquery', includes_url( '/js/jquery/jquery.js' ), '', '1.11.3');
-    wp_enqueue_script( 'jquery' );*/
+	// Latest jQuery - IE <9 not supported
+	wp_register_script('jquery', 'http'.($_SERVER['SERVER_PORT'] == 443 ? 's' : '').'://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js', array(), '3.0.0');
+	// This version is older and discontinued, but is more compatible with existing scripts & plugins
+	//wp_register_script( 'jquery', '//code.jquery.com/jquery-1.11.2.min.js', '', '1.11.2');
+	wp_enqueue_script( 'jquery' );*/
 
 	// Browser Specific
 	/*global $wp_styles;
