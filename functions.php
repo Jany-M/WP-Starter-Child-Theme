@@ -9,6 +9,11 @@
 *
 -------------------------------------------------------------------------------- */
 
+if(!defined('WP_STARTER_LIB_PATH'))
+    define('WP_STARTER_LIB_PATH', TEMPLATEPATH.'/lib/');
+if(!defined('WP_STARTER_LIB_URL'))
+    define('WP_STARTER_LIB_URL', get_template_directory_uri().'/lib/');
+
 define('WP_STARTER_CHILD_VERS', '1.3.8');
 
 if(!defined('WP_STARTER_CHILD_ASSETS_PATH')) // change this in your wp-config
@@ -17,8 +22,6 @@ if(!defined('WP_STARTER_CHILD_ASSETS_URL')) // change this in your wp-config
 	define('WP_STARTER_CHILD_ASSETS_URL', get_stylesheet_directory_uri().'/assets/');
 if(!defined('WP_STARTER_CHILD_LIB_PATH')) // change this in your wp-config
 	define('WP_STARTER_CHILD_LIB_PATH', STYLESHEETPATH.'/lib/');
-if(!defined('WP_STARTER_LIB_PATH')) // change this in your wp-config
-	define('WP_STARTER_LIB_PATH', TEMPLATEPATH.'/lib/');
 if(!defined('WP_STARTER_CHILD_LANG')) // change this in your wp-config
 	define('WP_STARTER_CHILD_LANG', STYLESHEETPATH.'/languages/'); // change this in your wp-config - keep in mind that 'languages' is compatible with WPML
 
