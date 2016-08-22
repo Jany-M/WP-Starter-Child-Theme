@@ -46,7 +46,7 @@ STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 *
 -------------------------------------------------------------------------------- */
 
-include_once(STYLESHEETPATH.'/assets/debug_tools.php');
+include_once(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php');
 
 global $locale;
 
@@ -97,18 +97,18 @@ function load_child_files() {
 	wp_enqueue_style( 'ie7_css' );*/
 
 	// Default CSS
-	wp_register_style( 'custom_css', get_stylesheet_directory_uri().'/assets/css/style.css', array('bootstrap_css'), '', 'all');
+	wp_register_style( 'custom_css', WP_STARTER_CHILD_ASSETS_URL.'css/style.css', array('bootstrap_css'), '', 'all');
 	wp_enqueue_style( 'custom_css' );
 
 	// Responsive CSS
-	if(file_exists(STYLESHEETPATH.'/assets/css/responsive.css')) {
-		wp_register_style( 'resp_theme_css', get_stylesheet_directory_uri().'/assets/css/responsive.css', array('custom_css'), '', 'all');
+	if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/responsive.css')) {
+		wp_register_style( 'resp_theme_css', WP_STARTER_CHILD_ASSETS_URL.'css/responsive.css', array('custom_css'), '', 'all');
 		wp_enqueue_style( 'resp_theme_css' );
 	}
 
 	// Print CSS
-	if(file_exists(STYLESHEETPATH.'/assets/css/print.css')) {
-		wp_register_style( 'print_css', get_stylesheet_directory_uri().'/assets/css/print.css', array('resp_theme_css'), '', 'print');
+	if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/print.css')) {
+		wp_register_style( 'print_css', WP_STARTER_CHILD_ASSETS_URL.'css/print.css', array('resp_theme_css'), '', 'print');
 		wp_enqueue_style( 'print_css' );
 	}
 
@@ -121,9 +121,9 @@ if(!is_admin()) {
 
 // Add css for Backend Editor
 function custom_editor_styles() {
-    add_editor_style( get_stylesheet_directory_uri().'/assets/css/editor-style.css' );
+    add_editor_style(WP_STARTER_CHILD_ASSETS_URL.'css/editor-style.css' );
 }
-if(file_exists(STYLESHEETPATH.'/assets/css/editor-style.css')) {
+if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/editor-style.css')) {
 	add_action( 'admin_init', 'custom_editor_styles' );
 }
 
@@ -172,8 +172,8 @@ include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
 function custom_login_logo() {
 	global $def_login_img_url, $def_login_img_w, $def_login_img_h;
 
-	if(file_exists(dirname(__FILE__) . '/assets/img/logo.png')) {
-		$login_img_url = get_stylesheet_directory_uri().'/assets/img/logo.png';
+	if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'img/logo.png')) {
+		$login_img_url = WP_STARTER_CHILD_ASSETS_URL.'img/logo.png';
 		$login_img_w = '200px';
 		$login_img_h = '111px';
 	} else {
