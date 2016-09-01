@@ -9,27 +9,62 @@
 *
 -------------------------------------------------------------------------------- */
 
+define('WP_STARTER_CHILD_VERS', '1.4');
+
+// WP DEFAULTS
+if(!defined('WP_HOME'))
+    define('WP_HOME', get_bloginfo('url'));
+if(!defined('WP_SITEURL'))
+    define('WP_SITEURL', get_bloginfo('url'));
+
+// WPML ADJUSTED HOMEPAGE URL
+if(function_exists('icl_get_home_url')) {
+    define('HOMEPAGE', icl_get_home_url());
+} else {
+    define('HOMEPAGE', WP_HOME);
+}
+
+// WP STARTER FRAMEWORK PATHS
 if(!defined('WP_STARTER_LIB_PATH'))
     define('WP_STARTER_LIB_PATH', TEMPLATEPATH.'/lib/');
 if(!defined('WP_STARTER_LIB_URL'))
     define('WP_STARTER_LIB_URL', get_template_directory_uri().'/lib/');
+if(!defined('WP_STARTER_ASSETS_PATH'))
+    define('WP_STARTER_ASSETS_PATH', TEMPLATEPATH.'/assets/');
+if(!defined('WP_STARTER_ASSETS_URL'))
+    define('WP_STARTER_ASSETS_URL', get_template_directory_uri().'/assets/');
 
-define('WP_STARTER_CHILD_VERS', '1.3.8');
-
-if(!defined('WP_STARTER_CHILD_ASSETS_PATH')) // change this in your wp-config
+// WP STARTER CHILD PATHS
+if(!defined('WP_STARTER_CHILD_ASSETS_PATH'))
 	define('WP_STARTER_CHILD_ASSETS_PATH', STYLESHEETPATH.'/assets/');
-if(!defined('WP_STARTER_CHILD_ASSETS_URL')) // change this in your wp-config
+if(!defined('WP_STARTER_CHILD_ASSETS_URL'))
 	define('WP_STARTER_CHILD_ASSETS_URL', get_stylesheet_directory_uri().'/assets/');
-if(!defined('WP_STARTER_CHILD_LIB_PATH')) // change this in your wp-config
+if(!defined('WP_STARTER_CHILD_LIB_PATH'))
 	define('WP_STARTER_CHILD_LIB_PATH', STYLESHEETPATH.'/lib/');
-if(!defined('WP_STARTER_CHILD_LANG')) // change this in your wp-config
-	define('WP_STARTER_CHILD_LANG', STYLESHEETPATH.'/languages/'); // change this in your wp-config - keep in mind that 'languages' is compatible with WPML
+if(!defined('WP_STARTER_CHILD_LANG'))
+	define('WP_STARTER_CHILD_LANG', STYLESHEETPATH.'/languages/'); // 'languages' is compatible with WPML
 
-$theme = wp_get_theme();
-if(!defined('THEME_DOMAIN'))
-	define('THEME_DOMAIN', $theme->get('TextDomain')); //use this var when necessary, for inline translations eg. _e('Contact us', THEME_DOMAIN);
+// THEME
+$theme_child = wp_get_theme('wp-starter'); // child
+if(!defined('TEXT_DOMAIN'))
+	define('TEXT_DOMAIN', $theme_child->get('TextDomain'));
 if(!defined('THEME_NAME'))
-	define('THEME_NAME', $theme->get('Name'));
+	define('THEME_NAME', $theme_child->get('Name'));
+
+// WPML - DEFAULT SITE LANG
+/*if(array_key_exists('sitepress', $GLOBALS)) {
+	global $sitepress;
+	$deflang = $sitepress->get_default_language(); // This is WP default lang, as set from WPML
+    global $deflang;
+	if(defined('ICL_LANGUAGE_CODE')) {
+		$lang = ICL_LANGUAGE_CODE; // This is the
+        global $lang;
+	}
+} else {
+	//$lang = $locale; //set your default lang
+    $lang = '';
+}*/
+
 
 /*
 get_stylesheet_directory_uri(); // Child Theme
