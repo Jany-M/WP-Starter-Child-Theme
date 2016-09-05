@@ -178,11 +178,8 @@ function wp_imager_admin_msg() { ?>
 
 // script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
 $wpimpager_child = WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
-$wpimpager_parent = WP_STARTER_LIB_PATH.'helpers/wp-imager.php';
 if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
 	include_once WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
-} elseif (is_file($wpimpager_parent) || file_exists($wpimpager_parent)) {
-	include_once WP_STARTER_LIB_PATH.'helpers/wp-imager.php';
 } else {
 	add_action( 'admin_notices', 'wp_imager_admin_msg' );
 }
