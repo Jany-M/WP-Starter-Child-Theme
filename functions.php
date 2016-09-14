@@ -106,7 +106,7 @@ function wp_starter_childtheme_setup() {
 	// to add header image support go here: http://themble.com/support/adding-header-background-image-support/
 
 	// ADD LANGUAGE FILE
-	load_child_theme_textdomain( THEME_DOMAIN, WP_STARTER_CHILD_LANG);
+	load_child_theme_textdomain( TEXT_DOMAIN, WP_STARTER_CHILD_LANG);
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
