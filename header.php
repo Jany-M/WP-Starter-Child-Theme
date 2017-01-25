@@ -1,4 +1,4 @@
-<!doctype html>  
+<!doctype html>
 <!--[if IEMobile 7 ]> <html <?php language_attributes(); ?>class="no-js iem7"> <![endif]-->
 <!--[if lt IE 7 ]> <html <?php language_attributes(); ?> class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html <?php language_attributes(); ?> class="no-js ie7"> <![endif]-->
@@ -36,7 +36,7 @@
 		if ($paged>1) {
 			echo ' - page '. $paged; }
 	?></title>
-	<!-- <link rel="shortcut icon" href="<?php //bloginfo('template_directory');?>/assets/img/favicon.ico">  -->
+	<!-- <link rel="shortcut icon" href="<?php //get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico"> -->
 	<!-- media-queries.js (fallback) -->
 	<!--[if lt IE 9]><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
 	<!-- html5.js -->
@@ -45,5 +45,28 @@
 	<?php if (is_singular() && get_option('thread_comments')) wp_enqueue_script('comment-reply'); ?>
 	<?php wp_head(); ?>
 </head>
-	
-<body <?php body_class(); ?>>
+
+<?php
+	// Body classes extras
+	global $wp_query, $post;
+	$classes = '';
+
+	/* echo '<pre>';
+	  //var_dump($wp_query);
+	  var_dump($post);
+	  echo '</pre><br><br>----------------------------------------------<br>';
+	  echo  $post->post_name; */
+
+	if (is_page() || is_singular())
+		$classes = $post->post_name.' '.$post->post_name.'-section';
+	    if ( function_exists('icl_object_id') ) {
+	        if(ICL_LANGUAGE_CODE == 'en') {
+	            $classes .= ' en';
+	        } else {
+	            $classes .= ' it';
+	        }
+	    }
+		//if(is_archive()) $classes = $wp_query->query['category_name'];
+?>
+
+<body <?php body_class($classes); ?>>

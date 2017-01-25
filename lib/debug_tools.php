@@ -5,11 +5,15 @@
 * [WP] Starter Child Theme - DEBUG
 *
 -------------------------------------------------------------------------------- */
-/* --------------------------------------------------------------------------------
-*
-* [WP] Starter Child Theme - DEBUG
-*
--------------------------------------------------------------------------------- */
+
+// DEBUG
+/*@ini_set( 'log_errors', 'On' );
+@ini_set( 'display_errors', 'On' );
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', false );
+define( 'WP_DEBUG_DISPLAY', true );
+define('SCRIPT_DEBUG', true);*/
+
 function display_vars() {
     global $query, $wp_query, $post, $product, $woocommerce, $WCS;
 

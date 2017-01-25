@@ -1,9 +1,8 @@
-# [WP] Starter Child Theme `v 1.3.8`
+# [WP] Starter Child Theme `v 1.4.2`
 
 A bare WordPress child theme with the latest Bootstrap and other WordPress handy functions, ready to use.
 This is meant to be used with its Parent Theme [WP-Starter](https://github.com/Jany-M/WP-Starter) to work as intended.
 Place both in your WordPress wp-contents/themes folder, and activate the Child Theme.
-
 
 Comes with examples & snippets for custom:
 - post types & taxonomies

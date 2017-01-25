@@ -81,7 +81,8 @@ STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 *
 -------------------------------------------------------------------------------- */
 
-include_once(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php');
+if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php'))
+    include_once WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php';
 
 global $locale;
 
@@ -117,10 +118,10 @@ add_action('after_setup_theme','wp_starter_childtheme_setup');
 -------------------------------------------------------------------------------- */
 function load_child_files() {
 
-	// By default WP Starter loads jquery 2.1.4 - If it causes problems, deregister it and load a diff one
+	// By default WP loads its own version of jQuery - If it causes problems, deregister it and load a diff one
 	/*wp_deregister_script( 'jquery' );
 	// Latest jQuery - IE <9 not supported
-	wp_register_script('jquery', 'http'.($_SERVER['SERVER_PORT'] == 443 ? 's' : '').'://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js', array(), '3.0.0');
+	wp_register_script('jquery', '//code.jquery.com/jquery-2.2.4.min.js', array(), '2.2.4');
 	// This version is older and discontinued, but is more compatible with existing scripts & plugins
 	//wp_register_script( 'jquery', '//code.jquery.com/jquery-1.11.2.min.js', '', '1.11.2');
 	wp_enqueue_script( 'jquery' );*/
@@ -184,8 +185,11 @@ if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
 	add_action( 'admin_notices', 'wp_imager_admin_msg' );
 }
 
-include_once WP_STARTER_LIB.'wordpress/cool_scripts.php';
-//include_once WP_STARTER_LIB.'wordpress/shortcodes.php';
+if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php'))
+    include_once WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php';
+
+/*if(file_exists(WP_STARTER_LIB_PATH.'wordpress/shortcodes.php'))
+    include_once WP_STARTER_LIB_PATH.'wordpress/shortcodes.php';*/
 
 // Include WordPress Related
 //include_once WP_STARTER_CHILD_LIB.'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
@@ -225,5 +229,86 @@ function custom_login_logo() {
 	</style>
 <?php }
 //add_action('login_head', 'custom_login_logo');
+
+// Remove Top Admin Bar in Frontend
+function remove_wp_adminbar() {
+	if( has_filter('show_admin_bar') ) {
+		add_filter( 'show_admin_bar', '__return_false' );
+	}
+    wp_deregister_script( 'admin-bar' );
+    wp_deregister_style( 'admin-bar' );
+    remove_action('wp_footer','wp_admin_bar_render',1000);
+	remove_action('init','wp_admin_bar_init');
+	remove_action('wp_head','wp_admin_bar_render',1000);
+	remove_action('wp_head','wp_admin_bar_css');
+	remove_action('wp_head','wp_admin_bar_dev_css');
+	remove_action('wp_head','wp_admin_bar_rtl_css');
+	remove_action('wp_head','wp_admin_bar_rtl_dev_css');
+	remove_action('wp_footer','wp_admin_bar_js');
+	remove_action('wp_footer','wp_admin_bar_dev_js');
+	add_theme_support( 'admin-bar', array( 'callback' => '__return_false') );
+	add_filter( 'show_admin_bar', '__return_false' );
+	remove_action( 'personal_options', '_admin_bar_preferences' );
+}
+if (!is_admin()){
+	add_action('after_setup_theme', 'remove_wp_adminbar');
+}
+
+/* --------------------------------------------------------------------------------
+*
+* [WP] Starter Child Theme - MEMCACHE FLUSH
+*
+-------------------------------------------------------------------------------- */
+
+// Flush Cache from Admin bar
+/*function flush_memcache_button() {
+	global  $wp_admin_bar,
+            $_wp_using_ext_object_cache;
+
+    if($_wp_using_ext_object_cache === false)
+        return;
+
+	if ( !is_user_logged_in() || !is_admin_bar_showing() )
+		return false;
+
+	if ( function_exists('current_user_can') && false == current_user_can('activate_plugins') )
+		return false;
+
+	$wp_admin_bar->add_menu( array(
+		'parent' => '',
+		'id' => 'flush_memcache_button',
+		'title' => __( 'Flush Cache' ),
+		'meta' => array( 'title' => __( 'Flush persistent object cache' )),
+		'href' => wp_nonce_url( admin_url( 'index.php?action=delcachepage'), 'flush_memcache_button' ))
+	);
+}
+if ( file_exists( WP_CONTENT_DIR . '/object-cache.php' ) ) {
+	add_action( 'admin_bar_menu', 'flush_memcache_button', 35 );
+}
+
+function flush_memcache() {
+	global $_wp_using_ext_object_cache;
+
+    if($_wp_using_ext_object_cache === false)
+        return;
+
+	if ( function_exists('current_user_can') && false == current_user_can('activate_plugins') )
+		return false;
+
+	if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delcachepage' && ( isset( $_GET[ '_wpnonce' ] ) ? wp_verify_nonce( $_REQUEST[ '_wpnonce' ], 'flush_memcache_button' ) : false ) ) {
+
+		//error_log(shell_exec("sudo /usr/bin/systemctl restart memcached2")); // replace with your server's memcached flush command
+
+		wp_redirect(admin_url().'?cache_type=object&cache_status=flushed');
+		die();
+	} else {
+		wp_redirect(admin_url().'?cache_type=object&cache_status=not_flushed');
+		die();
+	}
+
+}
+if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delcachepage' ) {
+	add_action( 'admin_init', 'flush_memcache');
+}*/
 
 ?>
