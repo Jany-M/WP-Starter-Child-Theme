@@ -16,6 +16,30 @@ if(!defined('WP_HOME'))
     define('WP_HOME', get_bloginfo('url'));
 if(!defined('WP_SITEURL'))
     define('WP_SITEURL', get_bloginfo('url'));
+/*if(!defined('WP_MEMORY_LIMIT'))
+    define('WP_MEMORY_LIMIT', '1800M');*/
+if(!defined('WP_POST_REVISIONS'))
+    define( 'WP_POST_REVISIONS', 3 );
+if(!defined('EMPTY_TRASH_DAYS'))
+    define( 'EMPTY_TRASH_DAYS', 15 );
+if(!defined('DISALLOW_FILE_EDIT'))
+    define( 'DISALLOW_FILE_EDIT', true ); // disallow editing plugins/themes from backend
+if(!defined('IMAGE_EDIT_OVERWRITE'))
+    define( 'IMAGE_EDIT_OVERWRITE', true );
+if(!defined('WP_AUTO_UPDATE_CORE'))
+    define( 'WP_AUTO_UPDATE_CORE', false );
+if(!defined('ENFORCE_GZIP'))
+    define('ENFORCE_GZIP', true);
+if(!defined('COMPRESS_SCRIPTS'))
+    define('COMPRESS_SCRIPTS', true);
+if(!defined('COMPRESS_CSS'))
+    define('COMPRESS_CSS', true);
+if(!defined('CONCATENATE_SCRIPTS'))
+    define('CONCATENATE_SCRIPTS', true);
+if(!defined('AUTOMATIC_UPDATER_DISABLED'))
+    define( 'AUTOMATIC_UPDATER_DISABLED', true );
+if(!defined('WP_ALLOW_REPAIR'))
+    define( 'WP_ALLOW_REPAIR', true );
 
 // WPML ADJUSTED HOMEPAGE URL
 if(function_exists('icl_get_home_url')) {
@@ -52,39 +76,18 @@ if(!defined('THEME_NAME'))
 	define('THEME_NAME', $theme_child->get('Name'));
 
 // WPML - DEFAULT SITE LANG
-/*if(array_key_exists('sitepress', $GLOBALS)) {
-	global $sitepress;
+if(array_key_exists('sitepress', $GLOBALS)) {
+    global $locale, $sitepress;
 	$deflang = $sitepress->get_default_language(); // This is WP default lang, as set from WPML
     global $deflang;
 	if(defined('ICL_LANGUAGE_CODE')) {
-		$lang = ICL_LANGUAGE_CODE; // This is the
         global $lang;
+		$lang = ICL_LANGUAGE_CODE;
 	}
 } else {
-	//$lang = $locale; //set your default lang
-    $lang = '';
-}*/
-
-
-/*
-get_stylesheet_directory_uri(); // Child Theme
-get_template_directory_uri(); // Parent Theme
-get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
-ABSPATH; // /home/shambs/shambix.com/
-TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
-STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
-*/
-
-/* --------------------------------------------------------------------------------
-*
-* [WP] Starter Child Theme - DEBUG
-*
--------------------------------------------------------------------------------- */
-
-if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php'))
-    include_once WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php';
-
-global $locale;
+	$lang = $locale; //set your default lang
+    //$lang = '';
+}
 
 // ADD THEME SUPPORT
 function wp_starter_childtheme_setup() {
@@ -111,6 +114,28 @@ function wp_starter_childtheme_setup() {
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
+/*
+get_stylesheet_directory_uri(); // Child Theme
+get_template_directory_uri(); // Parent Theme
+get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
+ABSPATH; // /home/shambs/shambix.com/
+TEMPLATEPATH; // /home/shambs/shambix.com/wp-content/themes/wp-starter
+STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
+*/
+
+/* --------------------------------------------------------------------------------
+*
+* [WP] Starter Child Theme - DEBUG
+*
+-------------------------------------------------------------------------------- */
+
+if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php'))
+    include_once WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php';
+
+ini_set('log_errors',TRUE);
+ini_set('error_reporting', E_ALL ^ E_WARNING);
+ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+
 /* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CSS & JS
@@ -119,22 +144,24 @@ add_action('after_setup_theme','wp_starter_childtheme_setup');
 function load_child_files() {
 
 	// By default WP loads its own version of jQuery - If it causes problems, deregister it and load a diff one
-	/*wp_deregister_script( 'jquery' );
+	wp_deregister_script( 'jquery' );
 	// Latest jQuery - IE <9 not supported
 	wp_register_script('jquery', '//code.jquery.com/jquery-2.2.4.min.js', array(), '2.2.4');
 	// This version is older and discontinued, but is more compatible with existing scripts & plugins
 	//wp_register_script( 'jquery', '//code.jquery.com/jquery-1.11.2.min.js', '', '1.11.2');
-	wp_enqueue_script( 'jquery' );*/
-
-	// Browser Specific
-	/*global $wp_styles;
-	wp_register_style( 'ie7_css', ''.get_stylesheet_directory_uri().'/assets/css/ie7.css', array('custom_css'), '', screen');
-	$wp_styles->add_data( 'ie7_css', 'conditional', 'IE 7' );
-	wp_enqueue_style( 'ie7_css' );*/
+	wp_enqueue_script( 'jquery' );
 
 	// Default CSS
 	wp_register_style( 'custom_css', WP_STARTER_CHILD_ASSETS_URL.'css/style.css', array('bootstrap_css'), '', 'all');
 	wp_enqueue_style( 'custom_css' );
+
+    // Browser Specific
+    if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/responsive.css')) {
+    	global $wp_styles;
+    	wp_register_style( 'ie7_css', WP_STARTER_CHILD_ASSETS_PATH.'css/ie7.css', array('custom_css'), '', 'screen');
+    	$wp_styles->add_data( 'ie7_css', 'conditional', 'IE 7' );
+    	wp_enqueue_style( 'ie7_css' );
+    }
 
 	// Responsive CSS
 	if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/responsive.css')) {
@@ -192,10 +219,12 @@ if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php'))
     include_once WP_STARTER_LIB_PATH.'wordpress/shortcodes.php';*/
 
 // Include WordPress Related
-//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
-//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_menus.php'; // use this file to add menus
-//include_once WP_STARTER_CHILD_LIB.'wordpress/custom_sidebars_widgets.php'; // use this file to add sidebars and custom widgets
-//include_once WP_STARTER_CHILD_LIB.'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
+//include_once WP_STARTER_CHILD_LIB_PATH.'wordpress/custom_post_types.php'; // use this file to Add Custom Post Types and Custom Taxonomies
+/*if(file_exists(WP_STARTER_CHILD_LIB_PATH.'wordpress/custom_menus.php')) // use this file to add menus//include_once
+    include_once WP_STARTER_CHILD_LIB_PATH.'wordpress/custom_menus.php'; */
+/*if(file_exists(WP_STARTER_CHILD_LIB_PATH.'wordpress/custom_sidebars_widgets.php'))// use this file to add sidebars and custom widgets
+    include_once WP_STARTER_CHILD_LIB_PATH.'wordpress/custom_sidebars_widgets.php';*/
+//include_once WP_STARTER_CHILD_LIB_PATH.'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
 
@@ -206,16 +235,14 @@ if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php'))
 -------------------------------------------------------------------------------- */
 
 function custom_login_logo() {
-	global $def_login_img_url, $def_login_img_w, $def_login_img_h;
-
 	if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'img/logo.png')) {
 		$login_img_url = WP_STARTER_CHILD_ASSETS_URL.'img/logo.png';
 		$login_img_w = '200px';
 		$login_img_h = '111px';
 	} else {
-		$login_img_url = $def_login_img_url;
-		$login_img_w = $def_login_img_w;
-		$login_img_h = $def_login_img_h;
+        $def_login_img_url = WP_STARTER_ASSETS_URL.'img/shambix.png';
+		$def_login_img_w = '100px';
+		$def_login_img_h = '100px';
 	}
 	?>
 	<style type="text/css">
@@ -228,7 +255,7 @@ function custom_login_logo() {
 		}
 	</style>
 <?php }
-//add_action('login_head', 'custom_login_logo');
+add_action('login_head', 'custom_login_logo');
 
 // Remove Top Admin Bar in Frontend
 function remove_wp_adminbar() {
@@ -256,7 +283,7 @@ if (!is_admin()){
 
 /* --------------------------------------------------------------------------------
 *
-* [WP] Starter Child Theme - MEMCACHE FLUSH
+* [WP] Starter Child Theme - MEMCACHED FLUSH
 *
 -------------------------------------------------------------------------------- */
 

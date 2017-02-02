@@ -1,6 +1,6 @@
 <?php
 
-/* -------------------------------------------------------------------------------- 
+/* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CUSTOM MENUS
 * Here are some custom menus and walkers examples (based on Twitter Bootstrap structure)
@@ -8,8 +8,8 @@
 -------------------------------------------------------------------------------- */
 
 // Custom Header Menu
-function unify_header_nav() {
-    wp_nav_menu(array( 
+function wpstarter_header_nav() {
+    wp_nav_menu(array(
 		'theme_location'  => 'wpstarter_header_nav',
     	'menu'			  => 'WP Starter Header Menu',
 		'container'		  => false,
@@ -25,14 +25,36 @@ function unify_header_nav() {
 		'link_after'      => '',
 		'items_wrap'      => '%3$s', // %3$s removes the empty first element, since we're using a Walker, otherwise use <li id="%1$s" class="%2$s">%3$s</li>, or a UL
 		//'depth'           => 0,
-		'walker' => new Unify_Walker_Header_Menu()
+		'walker' => new WPStarter_Walker_Header_Menu()
     ));
 }
 
+// Custom Footer Menu
+/*function wpstarter_footer_nav() {
+    wp_nav_menu(array(
+		'theme_location'  => 'wpstarter_footer_nav',
+    	'menu'			  => 'WP Starter Footer Menu',
+		'container'		  => false,
+		//'container_class' => '',
+		//'container_id'    => '',
+		'menu_class'	  => 'nav navbar-nav',
+		'menu_id'         => 'footer-nav',
+		//'echo'            => true,
+		'fallback_cb'     => '',
+		'before'          => '',
+		'after'           => '',
+		'link_before'     => '',
+		'link_after'      => '',
+		'items_wrap'      => '%3$s', // %3$s removes the empty first element, since we're using a Walker, otherwise use <li id="%1$s" class="%2$s">%3$s</li>, or a UL
+		//'depth'           => 0,
+		'walker' => new WPStarter_Walker_Header_Menu()
+    ));
+}*/
+
 // Custom Sidebar Menu
-function unify_sidebar_nav() {
+/*function wpstarter_sidebar_nav() {
 	// Can turn the array into a var $args and use it in the theme with wp_nav_menu instead of function
-    wp_nav_menu(array( 
+    wp_nav_menu(array(
     	'theme_location'  => 'wpstarter_sidebar_nav',
 		'menu'			  => 'WP Starter Sidebar Menu',
     	'container'		  => false,
@@ -48,15 +70,16 @@ function unify_sidebar_nav() {
 		'link_after'      => '',
 		'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
 		//'depth'           => 0,
-    	'walker' => new Unify_Walker_Sidebar_Menu()
+    	'walker' => new WPStarter_Walker_Sidebar_Menu()
     ));
-}
+}*/
 
 // Assign Menu to Location
 function register_menus() {
 	register_nav_menus(	array(
-		'unify_header_nav' => 'Unify Header Menu',
-		//'unify_sidebar_nav' => 'Unify Sidebar Menu'
+		'wpstarter_header_nav' => 'Header Menu',
+        //'wpstarter_footer_nav' => 'Footer Menu',
+		//'wpstarter_sidebar_nav' => 'Sidebar Menu'
 	));
 }
 // Uncomment to register the menus you created above
@@ -71,7 +94,11 @@ class WPStarter_Walker_Header_Menu extends Walker_Nav_Menu {
 	function start_lvl( &$output, $depth ) {
 		//In a child UL, add the 'dropdown-menu' class
 		$indent = str_repeat( "\t", $depth );
-		$output	   .= "\n$indent<ul class=\"dropdown-menu\">\n";	
+		$output	   .= "\n$indent<ul class=\"dropdown-menu\">\n";
+	}
+    function end_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "\n$indent</ul></nav>\n";
 	}
 	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
 		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
@@ -102,11 +129,11 @@ class WPStarter_Walker_Header_Menu extends Walker_Nav_Menu {
 		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target     ) .'"' : '';
 		$attributes .= ! empty( $item->xfn ) ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
 		$attributes .= ! empty( $item->url ) ? ' href="'   . esc_attr( $item->url        ) .'"' : '';
-		$attributes .= ($args->has_children) ? ' class="dropdown-toggle" data-toggle="dropdown"' : ''; 
+		$attributes .= ($args->has_children) ? ' class="dropdown-toggle" data-toggle="dropdown"' : '';
 		$item_output = $args->before;
 		$item_output .= '<a'. $attributes .'>';
 		$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-		//$item_output .= ($args->has_children) ? ' <b class="caret"></b> ' : ''; 
+		//$item_output .= ($args->has_children) ? ' <b class="caret"></b> ' : '';
 		$item_output .= '</a>';
 		$item_output .= $args->after;
 		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
@@ -116,10 +143,10 @@ class WPStarter_Walker_Header_Menu extends Walker_Nav_Menu {
 		if ( !$element ) return;
 		$id_field = $this->db_fields['id'];
 		//display this element
-		if ( is_array( $args[0] ) ) 
+		if ( is_array( $args[0] ) )
 			$args[0]['has_children'] = ! empty( $children_elements[$element->$id_field] );
-		else if ( is_object( $args[0] ) ) 
-			$args[0]->has_children = ! empty( $children_elements[$element->$id_field] ); 
+		else if ( is_object( $args[0] ) )
+			$args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
 		$cb_args = array_merge( array(&$output, $element, $depth), $args);
 		call_user_func_array(array(&$this, 'start_el'), $cb_args);
 		$id = $element->$id_field;
@@ -143,13 +170,13 @@ class WPStarter_Walker_Header_Menu extends Walker_Nav_Menu {
 		}
 		//end this element
 		$cb_args = array_merge( array(&$output, $element, $depth), $args);
-		call_user_func_array(array(&$this, 'end_el'), $cb_args);	
+		call_user_func_array(array(&$this, 'end_el'), $cb_args);
 	}
 }
 
 // Custom Sidebar Menu Walker
 // https://gist.github.com/FStop/2025312
-class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
+/*class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 	// Save item for start_lvl
 	private $curItem;
 	private $catSlug;
@@ -169,12 +196,8 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 	}
 
 	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
-		// Need to save this for start_lvl 
+		// Need to save this for start_lvl
 		$this->curItem = $item;
-		// Check if item has parent
-		/*echo '<pre>';
-		var_dump($item);
-		echo '</pre>';*/
 		// Need to get the category slug again...?
 		$catSlug = get_category($item->object_id)->slug;
 		$catName = get_category($item->object_id)->name;
@@ -183,7 +206,7 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		$li_attributes = '';
 		$class_names = $value = '';
 		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
-		
+
 		//Add class and attribute to LI element that contains a submenu UL.
 		if ($args->has_children){
 			$classes[] 		= 'list-toggle';
@@ -195,17 +218,17 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		if($item->menu_item_parent == 0 ) {
 			$classes[] = 'list-group-item';
 		}
-		
+
 		//If we are on the current page, add the active class to that menu item.
 		$classes[] = ($item->current) ? 'active' : '';
-		
+
 		//Make sure you still add all of the WordPress classes.
 		$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
 		$class_names = ' class="' . esc_attr( $class_names ) . '"';
 		$id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args );
 		$id = strlen( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
 		$output .= $indent . '<li' . $id . $value . $class_names . $li_attributes . '>';
-		
+
 		//Add attributes to link element.
 		$attributes  = ! empty( $item->attr_title ) ? ' title="'  . esc_attr( $item->attr_title ) .'"' : '';
 		$attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target     ) .'"' : '';
@@ -217,7 +240,7 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		} else {
 			$attributes .= ! empty( $item->url ) ? ' href="'   . esc_attr( $item->url        ) .'"' : '';
 		}
-		//$attributes .= ($args->has_children) ? ' class="dropdown-toggle" data-toggle="dropdown"' : ''; 
+		//$attributes .= ($args->has_children) ? ' class="dropdown-toggle" data-toggle="dropdown"' : '';
 		$item_output = $args->before;
 		$item_output .= '<a'. $attributes .'>';
 
@@ -225,7 +248,7 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		//$icon = iconize_get_term_icon_by('name', $catName, 'how-to-category');
 
 		$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-		//$item_output .= ($args->has_children) ? ' <b class="caret"></b> ' : ''; 
+		//$item_output .= ($args->has_children) ? ' <b class="caret"></b> ' : '';
 		$item_output .= '</a>';
 		$item_output .= $args->after;
 		$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
@@ -236,10 +259,10 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		if ( !$element ) return;
 		$id_field = $this->db_fields['id'];
 		//display this element
-		if ( is_array( $args[0] ) ) 
+		if ( is_array( $args[0] ) )
 			$args[0]['has_children'] = ! empty( $children_elements[$element->$id_field] );
-		else if ( is_object( $args[0] ) ) 
-			$args[0]->has_children = ! empty( $children_elements[$element->$id_field] ); 
+		else if ( is_object( $args[0] ) )
+			$args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
 		$cb_args = array_merge( array(&$output, $element, $depth), $args);
 		call_user_func_array(array(&$this, 'start_el'), $cb_args);
 		$id = $element->$id_field;
@@ -263,9 +286,9 @@ class WPStarter_Walker_Sidebar_Menu extends Walker_Nav_Menu {
 		}
 		//end this element
 		$cb_args = array_merge( array(&$output, $element, $depth), $args);
-		call_user_func_array(array(&$this, 'end_el'), $cb_args);	
+		call_user_func_array(array(&$this, 'end_el'), $cb_args);
 	}
-}
+}*/
 
 
 ?>
