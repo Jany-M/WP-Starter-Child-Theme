@@ -9,7 +9,7 @@
 *
 -------------------------------------------------------------------------------- */
 
-define('WP_STARTER_CHILD_VERS', '1.4');
+define('WP_STARTER_CHILD_VERS', '1.5');
 
 // WP DEFAULTS
 if(!defined('WP_HOME'))
@@ -136,11 +136,13 @@ ini_set('log_errors',TRUE);
 ini_set('error_reporting', E_ALL ^ E_WARNING);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 
+
 /* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CSS & JS
 *
 -------------------------------------------------------------------------------- */
+
 function load_child_files() {
 
 	// By default WP loads its own version of jQuery - If it causes problems, deregister it and load a diff one
@@ -190,6 +192,7 @@ if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/editor-style.css')) {
 	add_action( 'admin_init', 'custom_editor_styles' );
 }
 
+
 /* --------------------------------------------------------------------------------
 *
 * [WP] Starter Child Theme - CUSTOM FILES & HELPERS
@@ -212,9 +215,6 @@ if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
 	add_action( 'admin_notices', 'wp_imager_admin_msg' );
 }
 
-if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php'))
-    include_once WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php';
-
 /*if(file_exists(WP_STARTER_LIB_PATH.'wordpress/shortcodes.php'))
     include_once WP_STARTER_LIB_PATH.'wordpress/shortcodes.php';*/
 
@@ -227,6 +227,11 @@ if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php'))
 //include_once WP_STARTER_CHILD_LIB_PATH.'custom/wordpress/custom_meta_boxes.php'); // use this file to add custom meta boxes or edit system ones
 
 // Include Custom scripts & functions
+
+// Include Custom scripts & functions
+if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'scripts/custom.php')) {
+    include_once(WP_STARTER_CHILD_ASSETS_PATH.'scripts/custom.php');
+}
 
 /* --------------------------------------------------------------------------------
 *
@@ -257,6 +262,18 @@ function custom_login_logo() {
 <?php }
 add_action('login_head', 'custom_login_logo');
 
+// Custom Login form CSS
+/*function wp_starter_login_css() {
+    echo '<link rel="stylesheet" href="' . get_stylesheet_directory_uri() . '/library/css/login.css">';
+}
+add_action('login_head', 'wp_starter_login_css');*/
+
+/* --------------------------------------------------------------------------------
+*
+* [WP] Starter Child Theme - ADMIN BAR
+*
+-------------------------------------------------------------------------------- */
+
 // Remove Top Admin Bar in Frontend
 function remove_wp_adminbar() {
 	if( has_filter('show_admin_bar') ) {
@@ -278,7 +295,7 @@ function remove_wp_adminbar() {
 	remove_action( 'personal_options', '_admin_bar_preferences' );
 }
 if (!is_admin()){
-	add_action('after_setup_theme', 'remove_wp_adminbar');
+	//add_action('after_setup_theme', 'remove_wp_adminbar');
 }
 
 /* --------------------------------------------------------------------------------
@@ -337,5 +354,23 @@ function flush_memcache() {
 if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delcachepage' ) {
 	add_action( 'admin_init', 'flush_memcache');
 }*/
+
+/* --------------------------------------------------------------------------------
+*
+* [WP] Starter Child Theme - WP STARTER SCRIPTS
+*
+-------------------------------------------------------------------------------- */
+
+if(file_exists(WP_STARTER_LIB_PATH.'scripts/setup_extra.php')) {
+    include_once WP_STARTER_LIB_PATH.'scripts/setup_extra.php';
+}
+
+if(file_exists(WP_STARTER_LIB_PATH.'scripts/security.php')) {
+    include_once WP_STARTER_LIB_PATH.'scripts/security.php';
+}
+
+if(file_exists(WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php')) {
+    include_once WP_STARTER_LIB_PATH.'wordpress/cool_scripts.php';
+}
 
 ?>

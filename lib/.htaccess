@@ -1,60 +1,97 @@
 # This is a customized WP htaccess to use with WP Imager
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/(cache_img) [NC]
-RewriteRule . /index.php [L]
-RewriteRule ^cache_img/r/(.*)x(.*)-(.*)/b/(.*)/i/(.*) cache_img/tt.php?src=http://%{HTTP_HOST}/$5&w=$1&h=$2&zc=$3&q=100&cc=$4 [L]
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/(cache_img) [NC]
+    RewriteRule . /index.php [L]
+    RewriteRule ^cache_img/r/(.*)x(.*)-(.*)/b/(.*)/i/(.*) cache_img/tt.php?src=http://%{HTTP_HOST}/$5&w=$1&h=$2&zc=$3&q=100&cc=$4 [L]
 </IfModule>
 # End of Customized htaccess for WP-Imager
 
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
 </IfModule>
 # END WordPress
 
-# BEGIN Force Download
-AddType application/octet-stream .pdf .txt
+# Force text or pdf to be downloaded, not opened in browser
+#AddType application/octet-stream .pdf .txt
 # END Force Download
 
-<IfModule mod_headers.c>
-  <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css|js)$">
-    Header set Access-Control-Allow-Origin "*"
-  </FilesMatch>
-</IfModule>
+# Allow fonts, css and js to be used by any domain (incl. subdomains)
+#<IfModule mod_headers.c>
+#  <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css|js)$">
+#    Header set Access-Control-Allow-Origin "*"
+#  </FilesMatch>
+#</IfModule>
 
+# Add Mimetypes to Server
 AddType video/mp4  mp4 m4v
 AddType audio/mp4  m4a
 AddType video/ogg  ogv
 AddType audio/ogg  ogg oga
 AddType video/webm webm
 
-# No web server version and indexes
+# ------------------------------------------------------------------------------------------
+#
+#   SECURITY
+#
+# ------------------------------------------------------------------------------------------
+
+# No web server version
 ServerSignature Off
 
 # Disable directory browsing
-Options -Indexes
+Options All -Indexes
 
+# X-XSS-Protection
+<IfModule mod_headers.c>
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# X-Frame-Options
+<IfModule mod_headers.c>
+  Header always append X-Frame-Options SAMEORIGIN
+</IfModule>
+
+# X-Content-Type: nosniff
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options nosniff
+</IfModule>
+
+# Block WordPress xmlrpc.php requests
+<Files xmlrpc.php>
+    order deny,allow
+    deny from all
+    #allow from 217.64.205.133
+</Files>
+
+# Dont allow direct access to any file
+Order deny,allow
+Deny from all
+# exceptions
+<Files ~ “.(xml|jpeg|jpg|png|gif|js|css|xls|xlsx|doc|docx|ppt|pptx|pdf|otf|ttf|svg)$”>
+    Allow from all
+</Files>
+
+# Protections again Injections
 <IfModule mod_rewrite.c>
+    Options +FollowSymLinks
     RewriteEngine On
-
     # Block suspicious request methods
     RewriteCond %{REQUEST_METHOD} ^(HEAD|TRACE|DELETE|TRACK|DEBUG) [NC]
     RewriteRule ^(.*)$ - [F,L]
-
     # Block WP timthumb hack
     RewriteCond %{REQUEST_URI} (timthumb\.php|phpthumb\.php|thumb\.php|thumbs\.php) [NC]
     RewriteRule . - [S=1]
-
     # Block suspicious user agents and requests
     RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|python|nikto|curl|scan|java|winhttp|clshttp|loader) [NC,OR]
     RewriteCond %{HTTP_USER_AGENT} (<|>|'|%0A|%0D|%27|%3C|%3E|%00) [NC,OR]
@@ -64,18 +101,14 @@ Options -Indexes
     RewriteCond %{THE_REQUEST} etc/passwd [NC,OR]
     RewriteCond %{THE_REQUEST} cgi-bin [NC,OR]
     RewriteCond %{THE_REQUEST} (%0A|%0D) [NC,OR]
-
     # Block MySQL injections, RFI, base64, etc.
     #RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=http:// [OR]
     #RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=(\.\.//?)+ [OR]
-
     RewriteCond %{QUERY_STRING} [a-zA-Z0-9_]=/([a-z0-9_.]//?)+ [NC,OR]
     RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC,OR]
     RewriteCond %{QUERY_STRING} (\.\./|\.\.) [OR]
     RewriteCond %{QUERY_STRING} ftp\: [NC,OR]
-
     #RewriteCond %{QUERY_STRING} http\: [NC,OR]
-
     RewriteCond %{QUERY_STRING} https\: [NC,OR]
     RewriteCond %{QUERY_STRING} \=\|w\| [NC,OR]
     RewriteCond %{QUERY_STRING} ^(.*)/self/(.*)$ [NC,OR]
@@ -101,7 +134,13 @@ Options -Indexes
     RewriteRule ^(.*)$ - [F,L]
 </IfModule>
 
-# NO ACCESS TO WP LOG
+# Block access to PHP error log
+<Files error.log>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to WP debug log
 <Files debug.log>
     Order allow,deny
     Deny from all
@@ -109,96 +148,40 @@ Options -Indexes
 
 # BLOCK ACCESS TO HTACCESS
 <files ~ "^.*\.([Hh][Tt][Aa])">
-order allow,deny
-deny from all
-satisfy all
+    order allow,deny
+    deny from all
+    satisfy all
 </files>
 
 # BLOCK ACCESS TO CONFIG.PHP
 <files wp-config.php>
-order allow,deny
-deny from all
+    order allow,deny
+    deny from all
 </files>
 
 # Block wp-includes folder and files
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
-RewriteRule ^wp-admin/includes/ - [F,L]
-RewriteRule !^wp-includes/ - [S=3]
-RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
-RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
-RewriteRule ^wp-includes/theme-compat/ - [F,L]
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^wp-admin/includes/ - [F,L]
+    RewriteRule !^wp-includes/ - [S=3]
+    # comment this next line for WP MU
+    RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+    RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+    RewriteRule ^wp-includes/theme-compat/ - [F,L]
 </IfModule>
 
-# CACHING
-Header unset Pragma
-FileETag None
-Header unset ETag
+# Kill PHP Execution in the Uploads foler
+<Directory wp-content/uploads>
+     <FilesMatch "(?i)\.(php|php3?|phtml)$">
+            Order Deny,Allow
+            Deny from All
+    </FilesMatch>
+ </Directory>
 
-<ifModule mod_deflate.c>
-    <filesMatch "\.(js|css|html|php)$">
-        SetOutputFilter DEFLATE
-    </filesMatch>
-</ifModule>
-
-# BEGIN COMPRESSION AND CACHING
-<IfModule mod_deflate.c>
-	# Enable compression
-	AddOutputFilterByType DEFLATE text/css text/javascript application/x-javascript text/html text/plain text/xml image/x-icon
-	<IfModule mod_setenvif.c>
-	BrowserMatch ^Mozilla/4 gzip-only-text/html
-	BrowserMatch ^Mozilla/4\.0[678] no-gzip
-	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-	BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
-	</IfModule>
-
-	<IfModule mod_headers.c>
-	# Make sure proxies deliver correct content
-	Header append Vary User-Agent env=!dont-vary
-	# Ensure proxies deliver compressed content correctly
-	Header append Vary Accept-Encoding
-	</IfModule>
-</IfModule>
-
-# Cache-Control Headers
-<IfModule mod_headers.c>
-  <FilesMatch "\\.(ico|jpe?g|png|gif|swf|gz)$">
-  	#1month
-    Header set Cache-Control "max-age=2592000, public"
-  </FilesMatch>
-  <FilesMatch "\\.(css)$">
-  	#1week
-    Header set Cache-Control "max-age=604800, public"
-  </FilesMatch>
-  <FilesMatch "\\.(js)$">
-  	#1month
-    Header set Cache-Control "max-age=2592000, private"
-  </FilesMatch>
-<filesMatch "\\.(html|htm)$">
-	# 24h
-	Header set Cache-Control "max-age=86400, public"
-</filesMatch>
-# Disable caching for scripts and other dynamic files
-<FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
-	Header unset Cache-Control
-</FilesMatch>
-</IfModule>
-
-<FilesMatch "\.(ico|jpg|jpeg|png|gif|js|css|swf|pdf|flv|mp3|ttf)$">
-<IfModule mod_expires.c>
-ExpiresActive on
-ExpiresDefault "access plus 20 weeks"
-Header set Cache-Control "public"
-</IfModule>
-</FilesMatch>
-<FilesMatch "\.(html|htm|xml|txt|xsl)$">
-Header set Cache-Control "max-age=86400, must-revalidate"
-</FilesMatch>
-
+# Redirect access from certain websites referrals
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*0n-line\.tv.*$ [NC,OR]
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*100dollars-seo\.com.*$ [NC,OR]
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*12masterov\.com.*$ [NC,OR]
@@ -645,15 +628,11 @@ Header set Cache-Control "max-age=86400, must-revalidate"
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*zastroyka\.org.*$ [NC,OR]
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*zazagames\.org.*$ [NC,OR]
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*zverokruh-shop\.cz.*$ [NC]
-
 	RewriteCond %{HTTP_REFERER} ^http(s)?://(www\.)?.*semrush\.com.*$ [NC]
-
 	RewriteRule ^(.*)$ – [F,L]
-
 </IfModule>
 
 <IfModule mod_setenvif.c>
-
 	SetEnvIfNoCase Referer 0n-line.tv spambot=yes
 	SetEnvIfNoCase Referer 100dollars-seo.com spambot=yes
 	SetEnvIfNoCase Referer 12masterov.com spambot=yes
@@ -1118,3 +1097,73 @@ Header set Cache-Control "max-age=86400, must-revalidate"
 #        Require not env spambot
 #    </RequireAll>
 #</IfModule>
+
+# ------------------------------------------------------------------------------------------
+#
+#   CACHING
+#
+# ------------------------------------------------------------------------------------------
+
+Header unset Pragma
+FileETag None
+Header unset ETag
+
+<ifModule mod_deflate.c>
+    <filesMatch "\.(js|css|html|php)$">
+        SetOutputFilter DEFLATE
+    </filesMatch>
+</ifModule>
+
+# BEGIN COMPRESSION AND CACHING
+<IfModule mod_deflate.c>
+	# Enable compression
+	AddOutputFilterByType DEFLATE text/css text/javascript application/x-javascript text/html text/plain text/xml image/x-icon
+	<IfModule mod_setenvif.c>
+	BrowserMatch ^Mozilla/4 gzip-only-text/html
+	BrowserMatch ^Mozilla/4\.0[678] no-gzip
+	BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+	BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+	</IfModule>
+
+	<IfModule mod_headers.c>
+	# Make sure proxies deliver correct content
+	Header append Vary User-Agent env=!dont-vary
+	# Ensure proxies deliver compressed content correctly
+	Header append Vary Accept-Encoding
+	</IfModule>
+</IfModule>
+
+# Cache-Control Headers
+<IfModule mod_headers.c>
+    <FilesMatch "\\.(ico|jpe?g|png|gif|swf|gz)$">
+        #1month
+        Header set Cache-Control "max-age=2592000, public"
+    </FilesMatch>
+    <FilesMatch "\\.(css)$">
+        #1week
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+    <FilesMatch "\\.(js)$">
+        #1month
+        Header set Cache-Control "max-age=2592000, private"
+    </FilesMatch>
+    <filesMatch "\\.(html|htm)$">
+    	# 24h
+    	Header set Cache-Control "max-age=86400, public"
+    </filesMatch>
+    # Disable caching for scripts and other dynamic files
+    <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+    	Header unset Cache-Control
+    </FilesMatch>
+</IfModule>
+
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|js|css|swf|pdf|flv|mp3|ttf)$">
+    <IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault "access plus 20 weeks"
+    Header set Cache-Control "public"
+    </IfModule>
+    </FilesMatch>
+    <FilesMatch "\.(html|htm|xml|txt|xsl)$">
+    Header set Cache-Control "max-age=86400, must-revalidate"
+</FilesMatch>
