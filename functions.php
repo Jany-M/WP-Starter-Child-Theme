@@ -16,8 +16,6 @@ if(!defined('WP_HOME'))
     define('WP_HOME', get_bloginfo('url'));
 if(!defined('WP_SITEURL'))
     define('WP_SITEURL', get_bloginfo('url'));
-/*if(!defined('WP_MEMORY_LIMIT'))
-    define('WP_MEMORY_LIMIT', '1800M');*/
 if(!defined('WP_POST_REVISIONS'))
     define( 'WP_POST_REVISIONS', 3 );
 if(!defined('EMPTY_TRASH_DAYS'))
@@ -40,6 +38,8 @@ if(!defined('AUTOMATIC_UPDATER_DISABLED'))
     define( 'AUTOMATIC_UPDATER_DISABLED', true );
 if(!defined('WP_ALLOW_REPAIR'))
     define( 'WP_ALLOW_REPAIR', true );
+/*if(!defined('WP_MEMORY_LIMIT'))
+	define('WP_MEMORY_LIMIT', '1800M');*/
 
 // WPML ADJUSTED HOMEPAGE URL
 if(function_exists('icl_get_home_url')) {
@@ -129,12 +129,26 @@ STYLESHEETPATH; //  /home/shambs/shambix.com/wp-content/themes/shambix_v12
 *
 -------------------------------------------------------------------------------- */
 
-if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php'))
-    include_once WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php';
+// ERROR HANDLING - DEBUG for Admins
+if(current_user_can('activate_plugins')) :
+	//ini_set('error_reporting', E_ALL); // everything
+	ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT);// Report all errors except E_NOTICE and Strict Standards
+	//ini_set('error_reporting', E_ERROR | E_WARNING | E_PARSE); // Report simple running errors
+else :
+	ini_set('error_reporting', 0);
+endif;
 
 ini_set('log_errors',TRUE);
-ini_set('error_reporting', E_ALL ^ E_WARNING);
-ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
+if (defined('ABSPATH')) {
+	$path_to_err_log = ABSPATH; // defined in wp-config - root of wp
+} else {
+	$path_to_err_log = dirname(dirname(dirname(dirname(__FILE__)))) . '/'; // custom path - defaults to root of wp
+}
+ini_set('error_log', $path_to_err_log.'error_log.txt');
+
+if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php')) {
+    include_once WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php';
+}
 
 
 /* --------------------------------------------------------------------------------
