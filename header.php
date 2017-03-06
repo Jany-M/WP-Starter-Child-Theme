@@ -36,7 +36,9 @@
 		if ($paged>1) {
 			echo ' - page '. $paged; }
 	?></title>
-	<!-- <link rel="shortcut icon" href="<?php //get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico"> -->
+	<?php if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'img/favicon.ico')) { ?>
+		<link rel="shortcut icon" href="<?php get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico">
+	<?php } ?>
 	<!-- media-queries.js (fallback) -->
 	<!--[if lt IE 9]><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
 	<!-- html5.js -->
@@ -44,6 +46,8 @@
   	<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
 	<?php if (is_singular() && get_option('thread_comments')) wp_enqueue_script('comment-reply'); ?>
 	<?php wp_head(); ?>
+
+
 </head>
 
 <?php
