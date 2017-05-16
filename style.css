@@ -2,12 +2,12 @@
 Theme Name: [WP] Starter Child Theme
 Template: wp-starter
 Text Domain: wp-starter-child
-Description: Child theme skeleton developed for the [WP] Starter theme framework.
 Author: Shambix
 Author URI: http://www.shambix.com
+Theme URI: https://github.com/Jany-M/WP-Starter-Child-Theme
 Details URI: https://github.com/Jany-M/WP-Starter-Child-Theme
-
-Version: 1.5
+Description: Child theme skeleton developed for the [WP] Starter theme framework.
+Version: 1.6.1
 */
 
 /* if child import parent css */

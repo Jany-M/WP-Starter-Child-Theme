@@ -19,22 +19,27 @@
 	<meta name="Rating" content="General">
 	<meta name="expires" content="never"> -->
 	<title><?php
+		global $wp_query;
+
 		if (is_home() || is_front_page()) {
-			echo bloginfo('name'); echo ' - '; bloginfo('description'); }
+			bloginfo('name'); echo ' - '; bloginfo('description'); }
 		elseif (!(is_404()) && (is_single()) || (is_page())) {
-			echo the_title(); echo ' - '; bloginfo('name'); }
+			the_title(); echo ' &raquo; '; bloginfo('name'); }
 		elseif (function_exists('is_tag') && is_tag()) {
-			single_tag_title("Tag Archive for &quot;"); echo '&quot; - '; }
+			single_tag_title(__('Tag Archive for', TEXT_DOMAIN)); echo ' &raquo; '; bloginfo('name'); }
+		elseif(is_tax('categoria-progetto')) {
+			$tax = $wp_query->query_vars['taxonomy'];
+			echo _e('Content in ', TEXT_DOMAIN); echo get_term_by('slug', $wp_query->query_vars['term'], $tax)->name; echo ' &raquo; '; bloginfo('name');}
 		elseif (is_archive()) {
-			wp_title(''); echo ' - '; }
+			wp_title(''); echo '&quot; - '; bloginfo('name'); }
 		elseif (is_search()) {
-			echo 'Search for &quot;'.wp_specialchars($s).'&quot; - '; }
+			_e('Search', TEXT_DOMAIN); echo ' &quot;'.wp_specialchars($s).'&quot; '; bloginfo('name'); }
 		elseif (is_404()) {
-			echo 'Not Found - '; }
+			_e('404 - Not Found', TEXT_DOMAIN); }
 		else {
-			echo bloginfo('name'); }
+			bloginfo('name'); }
 		if ($paged>1) {
-			echo ' - page '. $paged; }
+			echo ' - pag.'. $paged; echo ' &raquo; '; bloginfo('name'); }
 	?></title>
 	<?php if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'img/favicon.ico')) { ?>
 		<link rel="shortcut icon" href="<?php get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico">

@@ -9,37 +9,25 @@
 *
 -------------------------------------------------------------------------------- */
 
-define('WP_STARTER_CHILD_VERS', '1.5');
+//define('WP_STARTER_CHILD_VERS', '1.6.1');
 
-// WP DEFAULTS
-if(!defined('WP_HOME'))
-    define('WP_HOME', get_bloginfo('url'));
-if(!defined('WP_SITEURL'))
-    define('WP_SITEURL', get_bloginfo('url'));
-if(!defined('WP_POST_REVISIONS'))
-    define( 'WP_POST_REVISIONS', 3 );
-if(!defined('EMPTY_TRASH_DAYS'))
-    define( 'EMPTY_TRASH_DAYS', 15 );
-if(!defined('DISALLOW_FILE_EDIT'))
-    define( 'DISALLOW_FILE_EDIT', true ); // disallow editing plugins/themes from backend
-if(!defined('IMAGE_EDIT_OVERWRITE'))
-    define( 'IMAGE_EDIT_OVERWRITE', true );
-if(!defined('WP_AUTO_UPDATE_CORE'))
-    define( 'WP_AUTO_UPDATE_CORE', false );
-if(!defined('ENFORCE_GZIP'))
-    define('ENFORCE_GZIP', true);
-if(!defined('COMPRESS_SCRIPTS'))
-    define('COMPRESS_SCRIPTS', true);
-if(!defined('COMPRESS_CSS'))
-    define('COMPRESS_CSS', true);
-if(!defined('CONCATENATE_SCRIPTS'))
-    define('CONCATENATE_SCRIPTS', true);
-if(!defined('AUTOMATIC_UPDATER_DISABLED'))
-    define( 'AUTOMATIC_UPDATER_DISABLED', true );
-if(!defined('WP_ALLOW_REPAIR'))
-    define( 'WP_ALLOW_REPAIR', true );
-/*if(!defined('WP_MEMORY_LIMIT'))
-	define('WP_MEMORY_LIMIT', '1800M');*/
+// WP DEFAULTS (most wont work here, place into wp-config instead)
+if(!defined('WP_HOME')) { define('WP_HOME', get_bloginfo('url')); }
+if(!defined('WP_SITEURL')) { define('WP_SITEURL', get_bloginfo('url')); }
+if(!defined('WP_POST_REVISIONS')) { define( 'WP_POST_REVISIONS', 3 ); }
+if(!defined('EMPTY_TRASH_DAYS')) { define( 'EMPTY_TRASH_DAYS', 15 ); }
+if(!defined('DISALLOW_FILE_EDIT')) { define( 'DISALLOW_FILE_EDIT', true ); }
+if(!defined('IMAGE_EDIT_OVERWRITE')) { define( 'IMAGE_EDIT_OVERWRITE', true ); }
+if(!defined('WP_AUTO_UPDATE_CORE')) { define( 'WP_AUTO_UPDATE_CORE', false ); }
+if(!defined('ENFORCE_GZIP')) { define('ENFORCE_GZIP', true); }
+if(!defined('COMPRESS_SCRIPTS')) { define('COMPRESS_SCRIPTS', true); }
+if(!defined('COMPRESS_CSS')) { define('COMPRESS_CSS', true); }
+if(!defined('CONCATENATE_SCRIPTS')) { define('CONCATENATE_SCRIPTS', true); }
+if(!defined('AUTOMATIC_UPDATER_DISABLED')) { define( 'AUTOMATIC_UPDATER_DISABLED', true ); }
+if(!defined('WP_ALLOW_REPAIR')) { define( 'WP_ALLOW_REPAIR', true ); }
+//if(!defined('WP_MEMORY_LIMIT')) { define('WP_MEMORY_LIMIT', '512M'); }
+
+@ini_set('mysql.connect_timeout', 600);
 
 // WPML ADJUSTED HOMEPAGE URL
 if(function_exists('icl_get_home_url')) {
@@ -48,32 +36,45 @@ if(function_exists('icl_get_home_url')) {
     define('HOMEPAGE', WP_HOME);
 }
 
-// WP STARTER FRAMEWORK PATHS
-if(!defined('WP_STARTER_LIB_PATH'))
+// WP STARTER FRAMEWORK PATHS - Only change if you know what you're doing
+if(!defined('PARENT_THEME')) {
+    define('PARENT_THEME', 'wp-starter'); // name of your custom parent template, if not wp-starter
+}
+if(!defined('WP_STARTER_LIB_PATH')) {
     define('WP_STARTER_LIB_PATH', TEMPLATEPATH.'/lib/');
-if(!defined('WP_STARTER_LIB_URL'))
+}
+if(!defined('WP_STARTER_LIB_URL')) {
     define('WP_STARTER_LIB_URL', get_template_directory_uri().'/lib/');
-if(!defined('WP_STARTER_ASSETS_PATH'))
+}
+if(!defined('WP_STARTER_ASSETS_PATH')) {
     define('WP_STARTER_ASSETS_PATH', TEMPLATEPATH.'/assets/');
-if(!defined('WP_STARTER_ASSETS_URL'))
+}
+if(!defined('WP_STARTER_ASSETS_URL')) {
     define('WP_STARTER_ASSETS_URL', get_template_directory_uri().'/assets/');
+}
 
-// WP STARTER CHILD PATHS
-if(!defined('WP_STARTER_CHILD_ASSETS_PATH'))
+// WP STARTER CHILD PATHS - Only change if you know what you're doing
+if(!defined('WP_STARTER_CHILD_ASSETS_PATH')) {
 	define('WP_STARTER_CHILD_ASSETS_PATH', STYLESHEETPATH.'/assets/');
-if(!defined('WP_STARTER_CHILD_ASSETS_URL'))
+}
+if(!defined('WP_STARTER_CHILD_ASSETS_URL')) {
 	define('WP_STARTER_CHILD_ASSETS_URL', get_stylesheet_directory_uri().'/assets/');
-if(!defined('WP_STARTER_CHILD_LIB_PATH'))
+}
+if(!defined('WP_STARTER_CHILD_LIB_PATH')) {
 	define('WP_STARTER_CHILD_LIB_PATH', STYLESHEETPATH.'/lib/');
-if(!defined('WP_STARTER_CHILD_LANG'))
+}
+if(!defined('WP_STARTER_CHILD_LANG')) {
 	define('WP_STARTER_CHILD_LANG', STYLESHEETPATH.'/languages/'); // 'languages' is compatible with WPML
+}
 
 // THEME
-$theme_child = wp_get_theme('wp-starter'); // child
-if(!defined('TEXT_DOMAIN'))
+$theme_child = wp_get_theme(PARENT_THEME); // child
+if(!defined('TEXT_DOMAIN')) {
 	define('TEXT_DOMAIN', $theme_child->get('TextDomain'));
-if(!defined('THEME_NAME'))
+}
+if(!defined('THEME_NAME')) {
 	define('THEME_NAME', $theme_child->get('Name'));
+}
 
 // WPML - DEFAULT SITE LANG
 if(array_key_exists('sitepress', $GLOBALS)) {
@@ -114,7 +115,7 @@ function wp_starter_childtheme_setup() {
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
 
-/*
+/* some ref functions
 get_stylesheet_directory_uri(); // Child Theme
 get_template_directory_uri(); // Parent Theme
 get_theme_root(); // /home/shambs/shambix.com/wp-content/themes
@@ -159,19 +160,36 @@ if(file_exists(WP_STARTER_CHILD_ASSETS_LIB_PATH.'debug_tools.php')) {
 
 function load_child_files() {
 
-	// By default WP loads its own version of jQuery - If it causes problems, deregister it and load a diff one
+	// Keep in mind that Bootstrap and FontAwesome are already loaded through WP-Starter (parent theme), if you want you can deregister them and/or load them again here
+
+	/*wp_deregister_script( 'boostrap_js' );
+	wp_deregister_style('bootstrap_css');
+	wp_deregister_style('fontawesome_css');
+	*/
+
+	// By default WP loads its own version of jQuery - I prefer to load the version I want
 	wp_deregister_script( 'jquery' );
-	// Latest jQuery - IE <9 not supported
-	wp_register_script('jquery', '//code.jquery.com/jquery-2.2.4.min.js', array(), '2.2.4');
-	// This version is older and discontinued, but is more compatible with existing scripts & plugins
-	//wp_register_script( 'jquery', '//code.jquery.com/jquery-1.11.2.min.js', '', '1.11.2');
+
+	/* ------------------------------------------------
+	| Popular CDNs for JS libraries
+	|
+	| https://cdnjs.com/libraries/jquery/
+	| https://developers.google.com/speed/libraries/
+	| ________________________________________________ */
+
+	// Latest jQuery - IE < 9 not supported
+	wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js', array(), '3.2.1');
+	// Latest 2x
+	//wp_register_script('jquery', '//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js', array(), '2.2.4');
+	// Latest 1x
+	//wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js', '', '1.12.4');
 	wp_enqueue_script( 'jquery' );
 
 	// Default CSS
 	wp_register_style( 'custom_css', WP_STARTER_CHILD_ASSETS_URL.'css/style.css', array('bootstrap_css'), '', 'all');
 	wp_enqueue_style( 'custom_css' );
 
-    // Browser Specific
+    // Browser Specific (example with IE7)
     if(file_exists(WP_STARTER_CHILD_ASSETS_PATH.'css/responsive.css')) {
     	global $wp_styles;
     	wp_register_style( 'ie7_css', WP_STARTER_CHILD_ASSETS_PATH.'css/ie7.css', array('custom_css'), '', 'screen');
@@ -223,7 +241,7 @@ function wp_imager_admin_msg() { ?>
 
 // script to resize and cache images and more, download at  https://github.com/Jany-M/WP-Imager/
 $wpimpager_child = WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
-if(is_file($wpimpager_child) || file_exists($wpimpager_child)) {
+if(is_file($wpimpager_child) && file_exists($wpimpager_child)) {
 	include_once WP_STARTER_CHILD_LIB_PATH.'helpers/wp-imager.php';
 } else {
 	add_action( 'admin_notices', 'wp_imager_admin_msg' );
@@ -288,7 +306,7 @@ add_action('login_head', 'wp_starter_login_css');*/
 *
 -------------------------------------------------------------------------------- */
 
-// Remove Top Admin Bar in Frontend
+// Remove Top Admin Bar in Frontend - NOT active by default
 function remove_wp_adminbar() {
 	if( has_filter('show_admin_bar') ) {
 		add_filter( 'show_admin_bar', '__return_false' );
