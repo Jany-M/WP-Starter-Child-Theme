@@ -26,8 +26,7 @@ if(!defined('CONCATENATE_SCRIPTS')) { define('CONCATENATE_SCRIPTS', true); }
 if(!defined('AUTOMATIC_UPDATER_DISABLED')) { define( 'AUTOMATIC_UPDATER_DISABLED', true ); }
 if(!defined('WP_ALLOW_REPAIR')) { define( 'WP_ALLOW_REPAIR', true ); }
 //if(!defined('WP_MEMORY_LIMIT')) { define('WP_MEMORY_LIMIT', '512M'); }
-
-@ini_set('mysql.connect_timeout', 600);
+//@ini_set('mysql.connect_timeout', 600);
 
 // WPML ADJUSTED HOMEPAGE URL
 if(function_exists('icl_get_home_url')) {
@@ -68,9 +67,14 @@ if(!defined('WP_STARTER_CHILD_LANG')) {
 }
 
 // THEME
+if(!defined('PARENT_THEME')) {
+    define('PARENT_THEME', 'avoir'); // name of your custom parent template, if not wp-starter
+}
 $theme_child = wp_get_theme(PARENT_THEME); // child
-if(!defined('TEXT_DOMAIN')) {
-	define('TEXT_DOMAIN', $theme_child->get('TextDomain'));
+if(!defined('TEXT_DOMAIN') && $theme_child->get(TEXT_DOMAIN) != '') {
+	define('TEXT_DOMAIN', $theme_child->get(TEXT_DOMAIN));
+} else {
+    define('TEXT_DOMAIN', PARENT_THEME);
 }
 if(!defined('THEME_NAME')) {
 	define('THEME_NAME', $theme_child->get('Name'));
@@ -89,6 +93,9 @@ if(array_key_exists('sitepress', $GLOBALS)) {
 	$lang = $locale; //set your default lang
     //$lang = '';
 }
+define('ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS', true);
+define('ICL_DONT_LOAD_NAVIGATION_CSS', true);
+define('ICL_DONT_LOAD_LANGUAGES_JS', true);
 
 // ADD THEME SUPPORT
 function wp_starter_childtheme_setup() {
@@ -114,6 +121,12 @@ function wp_starter_childtheme_setup() {
 	load_child_theme_textdomain( TEXT_DOMAIN, WP_STARTER_CHILD_LANG);
 }
 add_action('after_setup_theme','wp_starter_childtheme_setup');
+
+// CONTENT WIDTH FOR EMBEDS
+// Set Jetpack galleries width
+if ( ! isset( $content_width ) ) {
+	$content_width = 1170; // Bootstrap default
+}
 
 /* some ref functions
 get_stylesheet_directory_uri(); // Child Theme
@@ -302,7 +315,7 @@ add_action('login_head', 'wp_starter_login_css');*/
 
 /* --------------------------------------------------------------------------------
 *
-* [WP] Starter Child Theme - ADMIN BAR
+* [WP] Starter Child Theme - REMOVE WP DEFAULT SCRIPTS
 *
 -------------------------------------------------------------------------------- */
 
@@ -329,6 +342,30 @@ function remove_wp_adminbar() {
 if (!is_admin()){
 	//add_action('after_setup_theme', 'remove_wp_adminbar');
 }
+
+// Remove all emoji BS
+function disable_wp_emojicons() {
+  remove_action( 'admin_print_styles', 'print_emoji_styles' );
+  remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+  remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+  remove_action( 'wp_print_styles', 'print_emoji_styles' );
+  remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+  remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+  remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+  // filter to remove TinyMCE emojis
+  add_filter( 'tiny_mce_plugins', 'disable_emojicons_tinymce' );
+}
+add_action( 'init', 'disable_wp_emojicons' );
+
+function disable_emojicons_tinymce( $plugins ) {
+  if ( is_array( $plugins ) ) {
+    return array_diff( $plugins, array( 'wpemoji' ) );
+  } else {
+    return array();
+  }
+}
+
+add_filter( 'emoji_svg_url', '__return_false' );
 
 /* --------------------------------------------------------------------------------
 *
